@@ -5,28 +5,38 @@ public class Sort {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		ArrayList<Integer> nums = new ArrayList<Integer>();
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		ArrayList<Integer> bubbleArr = new ArrayList<Integer>();
+		ArrayList<Integer> selArr = new ArrayList<Integer>();
+		ArrayList<Integer> insArr = new ArrayList<Integer>();
 		int max = 30;
 		int min = 1;
 
 		for (int i = 0; i < 20; i++) {
-			nums.add((int) (Math.random() * (max - min + 1)) + min);
+			int temp = (int) (Math.random() * (max - min + 1)) + min;
+			arr.add(temp);
+			bubbleArr.add(temp);
+			selArr.add(temp);
+			insArr.add(temp);
 		}
 
 		System.out.println("\nGenerated random, unsorted list:");
-		System.out.println(nums);
+		System.out.println(arr);
 
 		System.out.println("\n\nBubble sort:");
-		System.out.println(bubble(nums));
+		System.out.println(bubble(bubbleArr));
 
 		System.out.println("\n\nSelection sort");
-		System.out.println(selection(nums));
+		System.out.println(selection(selArr));
 
 	}
 
 	public static ArrayList<Integer> selection(ArrayList<Integer> nums) {
 		for (int i = 0; i < nums.size(); i++) {
-
+			/*
+			
+			
+			*/
 		}
 
 		return nums;
