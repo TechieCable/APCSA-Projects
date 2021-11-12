@@ -33,8 +33,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 	SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
-//	Font large = new Font("Arial", );
-//	Font small = new Font("Arial", );
+	Font large = new Font("Comic Sans MS", Font.PLAIN, 50);
+	Font medium = new Font("Comic Sans MS", Font.PLAIN, 20);
+	Font small = new Font("Comic Sans MS", Font.PLAIN, 10);
 
 	public void weather() {
 		String id1 = "KNKX";
@@ -61,14 +62,18 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		Date date = new Date();
 
 		g.setColor(Color.white);
-//		g.setFont(large);
-		g.drawString("" + dateFormat.format(date), 25, 175);
-		g.drawString("" + timeFormat.format(date), 25, 200);
+		g.setFont(large);
+		g.drawString("" + dateFormat.format(date), 50, 150);
+		g.drawString("" + timeFormat.format(date), 80, 200);
+		g.drawString(ob1.temp + "", 120, 300);
 
-		g.drawString("Location: " + ob1.location, 25, 250);
-		g.drawString("Temperature: " + ob1.temp, 25, 300);
-		g.drawString("Description: " + ob1.description, 25, 350);
+		g.setFont(medium);
+		g.drawString(ob1.description + "", 150, 325);
+
 		g.drawString("Wind: " + ob1.windDir, 25, 400);
+
+		g.setFont(small);
+		g.drawString("Location: " + ob1.location, 25, 550);
 
 		if (ob1.description.contains("Sunny")) {
 			System.out.println("it's sunny!");
