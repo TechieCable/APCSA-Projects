@@ -45,8 +45,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		ds1.load();
 		// ds1.printUsageString();
 
-		ob1 = ds1.fetch("Observation", "weather", "temp_f", "wind_degrees", "location");
+		ob1 = ds1.fetch("Observation", "temp_f", "wind_degrees", "weather", "location", "wind_string", "wind_mph", "visibility_mi");
 		System.out.println(ob1);
+		// float temp, int windDir, String description, String location, String windDesc, Double windSpeed, int visibility
 	}
 
 	public void paint(Graphics g) {
@@ -69,8 +70,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		g.setFont(medium);
 		g.drawString(ob1.description + "", 150, 325);
+		
+		g.drawString("Wind", 150, 375);
 
-		g.drawString("Wind: " + ob1.windDir, 25, 400);
+
+		g.drawString(ob1.windDesc + "", 150, 400);
+		g.drawString(ob1.windSpeed + " mph", 140, 425);
 
 		g.setFont(small);
 		g.drawString("Location: " + ob1.location, 25, 550);
@@ -85,11 +90,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			System.out.println("it's overcast!");
 			bg.changePicture("overcast.jpg");
 		} else if (ob1.description.contains("Fog")) {
-			System.out.println("it's xxxx!");
-			// bg.changePicture("xxxx.jpg");
+			System.out.println("it's foggy!");
+			 bg.changePicture("fog.jpg");
 		} else if (ob1.description.contains("Fair")) {
-			System.out.println("it's xxxx!");
-			// bg.changePicture("xxxx.jpg");
+			System.out.println("it's fair!");
+			 bg.changePicture("fair.jpg");
 		} else if (ob1.description.contains("xxxxx")) {
 			System.out.println("it's xxxx!");
 			// bg.changePicture("xxxx.jpg");

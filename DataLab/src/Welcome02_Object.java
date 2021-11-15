@@ -34,18 +34,25 @@ class Observation {
 	int windDir; // in degrees
 	String description;
 	String location;
+	String windDesc;
+	Double windSpeed;
+	Double visibility;
 
 	Observation(String description, float temp, int windDir) {
 		this.description = description;
 		this.temp = temp;
 		this.windDir = windDir;
 	}
-	
-	Observation(String description, float temp, int windDir, String location) {
-		this.description = description;
+
+	public Observation(float temp, int windDir, String description, String location, String windDesc, Double windSpeed,
+			Double visibility) {
 		this.temp = temp;
 		this.windDir = windDir;
+		this.description = description;
 		this.location = location;
+		this.windDesc = windDesc;
+		this.windSpeed = windSpeed;
+		this.visibility = visibility;
 	}
 
 	/* determine if the temperature of this observation is colder than 'that's */
