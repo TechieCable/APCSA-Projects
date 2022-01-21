@@ -8,24 +8,22 @@ public class helloworld {
 
 		System.out.println("print to the console.");
 
-		System.out.println("TESTS ON STACK");
-		int i = 0;
-		Stack test = new Stack();
-		test.push(i++);
-		test.push(i++);
-		System.out.println(test);
-		System.out.println(test.pop());
-
 		System.out.println("TESTS ON QUEUE");
-		i = 0;
-		Queue test1 = new Queue();
-		test1.add(i++);
-		test1.add(i++);
-		System.out.println(test1);
-		System.out.println(test1.remove());
-		test1.add(i++);
-		System.out.println(test1);
-		System.out.println(test1.remove());
+		int i = 0;
+		Queue test = new Queue();
+		test.add(i++);
+		test.add(i++);
+		System.out.println(test);
+		System.out.println(test.size());
+		System.out.println(test.remove());
+		test.add(i++);
+		System.out.println(test);
+		System.out.println(test.remove());
+		System.out.println(test.remove());
+		System.out.println(test.remove());
+		System.out.println(test.remove());
+		System.out.println(test.remove());
+		System.out.println(test.remove());
 
 	}
 

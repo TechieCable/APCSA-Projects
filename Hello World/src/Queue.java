@@ -15,6 +15,9 @@ public class Queue<T> {
 	}
 
 	public T remove() {
+		if (in.size() == 0 && out.size() == 0) {
+			return null;
+		}
 		// when out stack is empty
 		if (out.size() == 0) {
 			// pop in stack into out stack, reverses order
@@ -25,6 +28,10 @@ public class Queue<T> {
 		// increment size and pop element
 		size--;
 		return out.pop();
+	}
+
+	public int size() {
+		return size;
 	}
 
 	public String toString() {
