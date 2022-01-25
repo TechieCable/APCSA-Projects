@@ -29,6 +29,14 @@ public class Stack<T> {
 		return data.remove(size);
 	}
 
+	public T peek() {
+		if (size < 1) {
+			return null;
+		}
+
+		return data.get(size - 1);
+	}
+
 	public String toString() {
 		if (size < 1) {
 			return "";
