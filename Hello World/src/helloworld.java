@@ -8,23 +8,6 @@ public class helloworld {
 
 		System.out.println("print to the console.");
 
-		System.out.println("TESTS ON QUEUE");
-		int i = 0;
-		Queue test = new Queue();
-		test.add(i++);
-		test.add(i++);
-		System.out.println(test);
-		System.out.println(test.size());
-		System.out.println(test.remove());
-		test.add(i++);
-		System.out.println(test);
-		System.out.println(test.remove());
-		System.out.println(test.remove());
-		System.out.println(test.remove());
-		System.out.println(test.remove());
-		System.out.println(test.remove());
-		System.out.println(test.remove());
-
 	}
 
 }
