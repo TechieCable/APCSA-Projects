@@ -45,4 +45,20 @@ public class Queue<T> {
 		return "no data";
 	}
 
+	public T peek() {
+		if (in.size() == 0 && out.size() == 0) {
+			return null;
+		}
+		// when out stack is empty
+		if (out.size() == 0) {
+			// pop in stack into out stack, reverses order
+			while (in.size() > 0) {
+				out.push(in.pop());
+			}
+		}
+		T res = out.pop();
+		out.push(res);
+		return res;
+	}
+
 }
