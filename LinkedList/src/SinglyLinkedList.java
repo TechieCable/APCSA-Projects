@@ -12,7 +12,7 @@ public class SinglyLinkedList {
 	}
 
 	public String toString() {
-		String res = "";
+		String res = "[";
 		Node curr = head;
 
 		while (curr.next != null) {
@@ -20,7 +20,7 @@ public class SinglyLinkedList {
 			curr = curr.next;
 		}
 		res += (Integer) curr.getData();
-		return res;
+		return res + "]";
 	}
 
 	public Node get(int index) {
@@ -32,13 +32,26 @@ public class SinglyLinkedList {
 	}
 
 	public Node remove(int n) {
-		size--;
+		if (head == null) {
+			return null;
+		}
+
 		Node curr = head;
 		Node res = null;
-		for (int i = 0; i < n; i++) {
-			res = curr;
-			curr = curr.next; // contains Node at n
+		size--;
+
+		if (n == 0) { // remove first one
+			res = head;
+			head = curr.next;
+			return res;
 		}
+
+		// get node before one that needs to be removed
+		for (int i = 0; i < n - 1; i++) {
+			curr = curr.next;
+		}
+		res = curr.next;
+		// set one that needs to be removed to the one after it
 		curr.next = curr.next.next;
 		return res;
 	}
@@ -59,18 +72,10 @@ public class SinglyLinkedList {
 
 	public static void main(String[] arg0) {
 		SinglyLinkedList test = new SinglyLinkedList();
-		test.add(new Node(10));
-		test.add(new Node(11));
-		test.add(new Node(12));
-		test.add(new Node(13));
-		System.out.println(test.get(0).getData());
-		System.out.println(test.get(1).getData());
-		System.out.println(test.get(2).getData());
-		System.out.println(test.get(3).getData());
+		test.add(new Node(7));
 		System.out.println(test);
-		System.out.println(test.remove(0).getData());
+		System.out.println(test.remove(1).getData());
 		System.out.println(test);
-
 	}
 
 }
