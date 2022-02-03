@@ -12,11 +12,14 @@ public class SinglyLinkedList {
 	}
 
 	public String toString() {
+		if (size == 0) {
+			return "";
+		}
 		String res = "[";
 		Node curr = head;
 
 		while (curr.next != null) {
-			res += (Integer) curr.getData() + ",";
+			res += (Integer) curr.getData() + ", ";
 			curr = curr.next;
 		}
 		res += (Integer) curr.getData();
@@ -32,7 +35,8 @@ public class SinglyLinkedList {
 	}
 
 	public Node remove(int n) {
-		if (head == null) {
+		if (head == null || n >= size) {
+			System.out.println("null");
 			return null;
 		}
 
@@ -56,6 +60,10 @@ public class SinglyLinkedList {
 		return res;
 	}
 
+	public <T> void add(T el) {
+		add(new Node(el));
+	}
+
 	public void add(Node n) {
 		size++;
 		if (head == null) {
@@ -72,10 +80,10 @@ public class SinglyLinkedList {
 
 	public static void main(String[] arg0) {
 		SinglyLinkedList test = new SinglyLinkedList();
-		test.add(new Node(7));
+//		test.add(new Node(7));
 		System.out.println(test);
-		System.out.println(test.remove(1).getData());
-		System.out.println(test);
+//		System.out.println(test.remove(1).getData());
+		// System.out.println(test);
 	}
 
 }
