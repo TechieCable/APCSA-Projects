@@ -2,67 +2,114 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+// method = true, coordinate mode
+// method = false, map mode
+
+// abcde
+// a - help
+// b - method
+// c - time
+// d - incoordinate
+// e - outcoordinate
+
 public class p1 {
 
 	public static void main(String[] args) {
-		boolean cor = false;
+		int commands = 00000;
+		System.out.println("|----------------------------------------|");
+		System.out.println("|    Project 1: Kirby's Quest for Cake   |");
+		System.out.println("|----------------------------------------|");
+		for (String arg : args) {
+			if (arg.equals("--Help")) {
+				commands += 10000;
+			} else if (arg.equals("--Stack")) {
+				commands += 1000;
+			} else if (arg.equals("--Queue")) {
+				commands += 2000;
+			} else if (arg.equals("--Opt")) {
+				commands += 4000;
+			} else if (arg.equals("--Time")) {
+				commands += 100;
+			} else if (arg.equals("--Incoordinate")) {
+				commands += 10;
+			} else if (arg.equals("--OutCoordinate")) {
+				commands += 1;
+			}
+		}
+
+		switch (commands) {
+		case "--Help":
+			System.out.println("|                                        |");
+			System.out.println("|                  Help                  |");
+			System.out.println("|                                        |");
+			System.out.println("| --Stack                                |");
+			System.out.println("|    Use a stack-based approach only     |");
+			System.out.println("| --Queue                                |");
+			System.out.println("|    Use a queue-based approach only     |");
+			System.out.println("| --Opt                                  |");
+			System.out.println("|    Find the best path to the cake      |");
+			System.out.println("| --Incoordinate                         |");
+			System.out.println("|    File is in coordinate system        |");
+			System.out.println("| --Outcoordinate                        |");
+			System.out.println("|    Print in coordinate system          |");
+			System.out.println("| --Help                                 |");
+			System.out.println("|    View this help dialog               |");
+			System.exit(0);
+			break;
+		case "--Stack":
+			break;
+		case "--Queue":
+			break;
+		case "--Opt":
+			break;
+		case "--Incoordinate":
+			break;
+		case "--Outcoordinate":
+			break;
+		default:
+			break;
+		}
+
+		boolean method = false;
+		int mapNum = 2;
 		try {
-			Scanner scan = new Scanner(new File("cable-map3" + (cor ? "-cor" : "") + ".txt"));
+			Scanner scan = new Scanner(new File("cable-map" + mapNum + (method ? "-cor" : "") + ".txt"));
 
 			Map m = new Map(scan.nextInt(), scan.nextInt(), scan.nextInt());
 			scan.nextLine(); // move scanner to next line (nextInt does not move to next line)
 
-			if (cor) {
-				mapCors(scan, m);
-			} else {
-				mapLines(scan, m);
-			}
-
+			m.processMap(scan, method);
 			System.out.println(m);
-			System.out.println(m.cors());
 
+			long start = System.currentTimeMillis();
+
+			//
+
+			System.out.println((System.currentTimeMillis() - start) / 1000);
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
+// .
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
-		}
-	}
-
-	public static void mapCors(Scanner scan, Map m) {
-		int d = 0; // room number
-		int prevR = 0;
-		// loop through each line
-		while (scan.hasNextLine()) {
-			char value = scan.next().charAt(0);
-			int row = scan.nextInt();
-			int col = scan.nextInt();
-
-			if (row < prevR) {
-				d++;
-			}
-
-			m.set(d, row, col, value);
-
-			prevR = row;
-		}
-	}
-
-	public static void mapLines(Scanner scan, Map m) {
-		int d = 0; // room number
-		int r = 0; // row number
-		// loop through each line
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
-
-			System.out.println("row = " + r + ", " + line);
-			for (int i = 0; i < line.length(); i++) {
-				// use charAt to grab each element of the map for a given row (r)
-				m.set(d, r, i, line.charAt(i));
-			}
-			r++;
-			if (r == m.rows) { // when r is number of rows in a room, reset
-				d++;
-				r = 0;
-			}
-
 		}
 	}
 }
