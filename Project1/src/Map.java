@@ -43,8 +43,19 @@ public class Map {
 		return m;
 	}
 
-//	public String cors() {
-//		
-//	}
+	public String cors() {
+		String m = "";
+		m += rows + " " + cols + " " + rooms + "\n";
+		
+		for (int d = 0; d < data.length; d++) {
+			for (int r = 0; r < data[d].length; r++) {
+				for (int c = 0; c < data[d][r].length; c++) {
+					m += data[d][r][c] + " " + r + " " + c + "\n";
+				}
+			}
+		}
+		
+		return m;
+	}
 
 }

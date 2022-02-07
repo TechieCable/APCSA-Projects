@@ -5,9 +5,9 @@ import java.util.Scanner;
 public class p1 {
 
 	public static void main(String[] args) {
-		boolean cor = true;
+		boolean cor = false;
 		try {
-			Scanner scan = new Scanner(new File("cable-map1" + (cor ? "-cor" : "") + ".txt"));
+			Scanner scan = new Scanner(new File("cable-map3" + (cor ? "-cor" : "") + ".txt"));
 
 			Map m = new Map(scan.nextInt(), scan.nextInt(), scan.nextInt());
 			scan.nextLine(); // move scanner to next line (nextInt does not move to next line)
@@ -19,6 +19,7 @@ public class p1 {
 			}
 
 			System.out.println(m);
+			System.out.println(m.cors());
 
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
