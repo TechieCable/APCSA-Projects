@@ -25,9 +25,15 @@ public class Map {
 		}
 	}
 
-	public void processMap(Scanner scan, boolean method) {
+	public Map(int rows, int cols, int rooms, Scanner scan, boolean inType) {
+		this(rows, cols, rooms);
+		scan.nextLine(); // move scanner to next line (nextInt does not move to next line)
+		processMap(scan, inType);
+	}
+
+	public void processMap(Scanner scan, boolean inType) {
 		int d = 0; // room number
-		if (method) {
+		if (inType) {
 			// coordinate method
 			int prevR = 0;
 			// loop through each line

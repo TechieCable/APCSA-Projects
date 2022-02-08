@@ -4,10 +4,12 @@ public class CircularlyLinkedList {
 			return false;
 		}
 		Node head = list.head;
-		Node first = head.next;
-		Node curr = first.next;
+		Node curr = head.next;
+		while (curr == head) {
+			
+		}
 		while (curr != null && curr.next != null) {
-			if (curr == first) {
+			if (curr == head) {
 				return true;
 			}
 			curr = curr.next;
@@ -23,5 +25,4 @@ public class CircularlyLinkedList {
 		System.out.println(test);
 		System.out.println(isCircular(test));
 	}
-
 }
