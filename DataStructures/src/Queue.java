@@ -1,4 +1,4 @@
-
+// queue implemented from stacks
 public class Queue<T> {
 	private Stack<T> in, out;
 	private int size;

@@ -1,16 +1,21 @@
-class Node<T> {
-	private T data;
+public class Node {
+	private int data;
 	Node next;
+	Node left;
+	Node right;
 
-	public Node(T t) {
-		data = t;
+	public Node(int data) {
+		this.data = data;
+		next = null;
+		left = null;
+		right = null;
 	}
 
-	public T getData() {
+	public int getData() {
 		return data;
 	}
 
-	public void setData(T t) {
-		data = t;
+	public void setData(int data) {
+		this.data = data;
 	}
 }

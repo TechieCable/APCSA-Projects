@@ -1,3 +1,4 @@
+// stack from queue
 public class QStack<T> {
 	Queue<T> q1 = new Queue<T>();
 	Queue<T> q2 = new Queue<T>();

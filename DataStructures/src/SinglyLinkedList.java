@@ -60,7 +60,7 @@ public class SinglyLinkedList {
 		return res;
 	}
 
-	public <T> void add(T el) {
+	public void add(int el) {
 		add(new Node(el));
 	}
 
