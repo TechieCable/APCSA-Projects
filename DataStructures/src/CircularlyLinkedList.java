@@ -6,7 +6,7 @@ public class CircularlyLinkedList {
 		Node head = list.head;
 		Node curr = head.next;
 		while (curr == head) {
-			
+
 		}
 		while (curr != null && curr.next != null) {
 			if (curr == head) {
