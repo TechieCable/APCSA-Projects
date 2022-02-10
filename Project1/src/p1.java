@@ -98,7 +98,9 @@ public class p1 {
 
 			//
 
-			System.out.println("Elapsed time = " + (System.currentTimeMillis() - start) / 1000);
+			if (printTime) {
+				System.out.println("Elapsed time = " + (System.currentTimeMillis() - start) / 1000);
+			}
 // .
 // .
 // .

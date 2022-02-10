@@ -18,4 +18,8 @@ public class Node {
 	public void setData(int data) {
 		this.data = data;
 	}
+
+	public String toString() {
+		return data + "";
+	}
 }

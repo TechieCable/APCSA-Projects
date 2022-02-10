@@ -3,13 +3,9 @@ public class CircularlyLinkedList {
 		if (list.head == null || list.size() < 2) {
 			return false;
 		}
-		Node head = list.head;
-		Node curr = head.next;
-		while (curr == head) {
-
-		}
+		Node curr = list.head.next;
 		while (curr != null && curr.next != null) {
-			if (curr == head) {
+			if (curr == list.head) {
 				return true;
 			}
 			curr = curr.next;
