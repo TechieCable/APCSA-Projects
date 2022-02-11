@@ -1,16 +1,13 @@
 public class CircularlyLinkedList {
 	public static boolean isCircular(SinglyLinkedList list) {
-		if (list.head == null || list.size() < 2) {
-			return false;
-		}
-		Node curr = list.head.next;
-		while (curr != null && curr.next != null) {
-			if (curr == list.head) {
-				return true;
-			}
+		Node curr = list.head;
+		for (int i = 0; i < list.size(); i++) {
 			curr = curr.next;
 		}
-		return false;
+		if (curr == null) {
+			return false;
+		}
+		return true;
 	}
 
 	public static void main(String[] args) {

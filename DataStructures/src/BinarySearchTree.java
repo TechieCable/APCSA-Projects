@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class BinarySearchTree {
 	// "Top" of the tree
 	Node head;
@@ -41,6 +43,13 @@ public class BinarySearchTree {
 		}
 	}
 
+	/*
+	 * Search for integer s in a binary search tree
+	 * 
+	 * @param int s - search value
+	 * 
+	 * @return boolean found
+	 */
 	public boolean find(int s) {
 		Node curr = head;
 
@@ -63,20 +72,7 @@ public class BinarySearchTree {
 		System.out.println(print(head));
 	}
 
-	public String bfs() {
-		// return a string representation of the nodes
-		// in a breath-first-search order
-		/* to be completed */
-		return bfs(head);
-	}
-
-	// pre-order depth-first-search traversal
-	public String dfs() {
-		/* to be completed */
-		return dfs(head);
-	}
-
-	public String print(Node start) {
+	private String print(Node start) {
 		String r = "";
 		Node curr = start;
 		if (curr != null) {
@@ -95,20 +91,79 @@ public class BinarySearchTree {
 		return r;
 	}
 
-	// error here - should look at each "row"
-	public String bfs(Node start) {
+	public String postOrder() {
+		return postOrder(head);
+	}
+
+	private String postOrder(Node start) {
 		if (start == null)
 			return "";
+
 		String r = "";
+		r += postOrder(start.left);
+		r += postOrder(start.right);
 		r += start.getData() + " ";
+		return r;
+	}
+
+	public String bfs() {
+		// return a string representation of the nodes
+		// in a breadth-first-search order
+		/* to be completed */
+		return bfs(head);
+		// (head != null ? head.getData() : "") + " " +
+	}
+
+	private String bfs(Node start) {
+		String r = "";
+		if (start == head)
+			r += head.getData() + " ";
+		if (start == null)
+			return "";
+		if (start.left != null) {
+			r += start.left.getData() + " ";
+		}
+		if (start.right != null) {
+			r += start.right.getData() + " ";
+		}
 		r += bfs(start.left);
 		r += bfs(start.right);
 
 		return r;
 	}
 
-	public String dfs(Node start) {
-		// preorder traversal
+	public String bfsArray() {
+		ArrayList<Integer> values = new ArrayList<Integer>();
+		bfsArray(head, values);
+
+		return values.toString();
+	}
+
+	private void bfsArray(Node start, ArrayList<Integer> values) {
+		// same problem exists
+		if (start == head)
+			values.add(head.getData());
+		if (start == null)
+			return;
+		if (start.left != null) {
+			values.add(start.left.getData());
+		}
+		if (start.right != null) {
+			values.add(start.right.getData());
+		}
+		bfsArray(start.left, values);
+		bfsArray(start.right, values);
+		return;
+	}
+
+	// inorder depth-first-search traversal
+	public String dfs() {
+		/* to be completed */
+		return dfs(head);
+	}
+
+	private String dfs(Node start) {
+		// inorder traversal
 		if (start == null)
 			return "";
 		String r = "";
@@ -121,25 +176,34 @@ public class BinarySearchTree {
 
 	public static void main(String[] args) {
 		BinarySearchTree test = new BinarySearchTree();
-//		test.add(new Node(5));
-//		test.add(new Node(2));
-//		test.add(new Node(1));
-//		test.add(new Node(3));
-//		test.add(new Node(12));
-//		test.add(new Node(9));
-//		test.add(new Node(21));
-//		test.add(new Node(19));
-//		test.add(new Node(25));
 
+//		test.add(new Node(10));
+//		test.add(new Node(7));
+//		test.add(new Node(11));
+//		test.add(new Node(5));
+//		test.add(new Node(4));
+//		test.add(new Node(8));
+
+//		test.add(new Node(10));
+//		test.add(new Node(1));
+//		test.add(new Node(11));
+//		test.add(new Node(0));
+
+		test.add(new Node(20));
 		test.add(new Node(10));
-		test.add(new Node(7));
-		test.add(new Node(11));
+		test.add(new Node(30));
 		test.add(new Node(5));
+		test.add(new Node(15));
+		test.add(new Node(25));
+		test.add(new Node(35));
+		test.add(new Node(0));
 
 		System.out.println(test.find(25));
 
-		System.out.println(test.bfs());
-		System.out.println(test.dfs());
+		System.out.println("bfs: " + test.bfs());
+		System.out.println("bfsArray: " + test.bfsArray());
+		System.out.println("dfs (inorder): " + test.dfs());
+		System.out.println("dfs (postorder): " + test.postOrder());
 	}
 
 }
