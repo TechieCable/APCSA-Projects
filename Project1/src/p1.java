@@ -2,12 +2,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-// abcde
-// a - help
-// b - method
-// c - time
-// d - incoordinate
-// e - outcoordinate
+// help
+// method
+// time
+// incoordinate
+// outcoordinate
 
 public class p1 {
 
@@ -79,7 +78,7 @@ public class p1 {
 			System.exit(-1);
 		}
 
-		int mapNum = 2;
+		int mapNum = 5;
 
 		try {
 			// parameter variables available
@@ -90,7 +89,7 @@ public class p1 {
 
 			Scanner scan = new Scanner(new File("cable-map" + mapNum + (inType ? "-cor" : "") + ".txt"));
 
-			Map m = new Map(scan.nextInt(), scan.nextInt(), scan.nextInt(), scan, inType);
+			Map m = new Map(scan, inType);
 
 			System.out.println(m);
 

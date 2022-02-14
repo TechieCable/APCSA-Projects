@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Map {
-	char[][][] data;
+	Position[][][] data;
 	int rooms;
 	int rows;
 	int cols;
@@ -10,23 +10,36 @@ public class Map {
 
 	// data[0] = {{".","."},{".","."}}
 
+//  ########  ########   #######   ######  ########  ######   ######  #### ##    ##  ######   
+//  ##     ## ##     ## ##     ## ##    ## ##       ##    ## ##    ##  ##  ###   ## ##    ##  
+//  ##     ## ##     ## ##     ## ##       ##       ##       ##        ##  ####  ## ##        
+//  ########  ########  ##     ## ##       ######    ######   ######   ##  ## ## ## ##   #### 
+//  ##        ##   ##   ##     ## ##       ##             ##       ##  ##  ##  #### ##    ##  
+//  ##        ##    ##  ##     ## ##    ## ##       ##    ## ##    ##  ##  ##   ### ##    ##  
+//  ##        ##     ##  #######   ######  ########  ######   ######  #### ##    ##  ######   
+
 	public Map(int rows, int cols, int rooms) {
 		this.rooms = rooms;
 		this.rows = rows;
 		this.cols = cols;
 
-		data = new char[rooms][rows][cols];
+		data = new Position[rooms][rows][cols];
+
 		for (int d = 0; d < data.length; d++) {
 			for (int r = 0; r < data[d].length; r++) {
 				for (int c = 0; c < data[d][r].length; c++) {
-					set(d, r, c, ".".charAt(0));
+					// set each position with blank space by default
+					data[d][r][c] = new Position(d, r, c, ".");
 				}
 			}
 		}
 	}
 
-	public Map(int rows, int cols, int rooms, Scanner scan, boolean inType) {
-		this(rows, cols, rooms);
+	/*
+	 * takes a scan with a map file and processes it
+	 */
+	public Map(Scanner scan, boolean inType) {
+		this(scan.nextInt(), scan.nextInt(), scan.nextInt());
 		scan.nextLine(); // move scanner to next line (nextInt does not move to next line)
 		processMap(scan, inType);
 	}
@@ -47,7 +60,7 @@ public class Map {
 					d++;
 				}
 
-				set(d, row, col, value);
+				data[d][row][col].value = value;
 				prevR = row;
 			}
 		} else {
@@ -59,7 +72,7 @@ public class Map {
 
 				for (int i = 0; i < line.length(); i++) {
 					// use charAt to grab each element of the map for a given row (r)
-					set(d, r, i, line.charAt(i));
+					data[d][r][i].value = line.charAt(i);
 				}
 
 				r++;
@@ -72,9 +85,13 @@ public class Map {
 		}
 	}
 
-	public void set(int room, int row, int col, char value) {
-		data[room][row][col] = value;
-	}
+//  ########  ########  #### ##    ## ########     #######  ##     ## ########  ######  
+//  ##     ## ##     ##  ##  ###   ##    ##       ##     ## ##     ##    ##    ##    ## 
+//  ##     ## ##     ##  ##  ####  ##    ##       ##     ## ##     ##    ##    ##       
+//  ########  ########   ##  ## ## ##    ##       ##     ## ##     ##    ##     ######  
+//  ##        ##   ##    ##  ##  ####    ##       ##     ## ##     ##    ##          ## 
+//  ##        ##    ##   ##  ##   ###    ##       ##     ## ##     ##    ##    ##    ## 
+//  ##        ##     ## #### ##    ##    ##        #######   #######     ##     ######  
 
 	public String toString() {
 		String m = "";
@@ -84,27 +101,13 @@ public class Map {
 			m += "Room#" + d + "\n";
 			for (int r = 0; r < data[d].length; r++) {
 				for (int c = 0; c < data[d][r].length; c++) {
-					m += data[d][r][c] + "";
+					m += data[d][r][c].value + "";
 				}
 				m += "\n";
 			}
 		}
 
 		return m;
-	}
-
-	public int numCakes() {
-		int count = 0;
-		for (int d = 0; d < data.length; d++) {
-			for (int r = 0; r < data[d].length; r++) {
-				for (int c = 0; c < data[d][r].length; c++) {
-					if ((data[d][r][c] + "").equals("C")) {
-						count++;
-					}
-				}
-			}
-		}
-		return count;
 	}
 
 	public String printMap(boolean method) {
@@ -122,7 +125,7 @@ public class Map {
 		for (int d = 0; d < data.length; d++) {
 			for (int r = 0; r < data[d].length; r++) {
 				for (int c = 0; c < data[d][r].length; c++) {
-					m += data[d][r][c];
+					m += data[d][r][c].value;
 				}
 				m += "\n";
 			}
@@ -134,10 +137,80 @@ public class Map {
 		for (int d = 0; d < data.length; d++) {
 			for (int r = 0; r < data[d].length; r++) {
 				for (int c = 0; c < data[d][r].length; c++) {
-					m += data[d][r][c] + " " + r + " " + c + "\n";
+					m += data[d][r][c].value + " " + r + " " + c + "\n";
 				}
 			}
 		}
 		return m;
+	}
+
+//  ##        #######   ######     ###    ######## ####  #######  ##    ##  ######  
+//  ##       ##     ## ##    ##   ## ##      ##     ##  ##     ## ###   ## ##    ## 
+//  ##       ##     ## ##        ##   ##     ##     ##  ##     ## ####  ## ##       
+//  ##       ##     ## ##       ##     ##    ##     ##  ##     ## ## ## ##  ######  
+//  ##       ##     ## ##       #########    ##     ##  ##     ## ##  ####       ## 
+//  ##       ##     ## ##    ## ##     ##    ##     ##  ##     ## ##   ### ##    ## 
+//  ########  #######   ######  ##     ##    ##    ####  #######  ##    ##  ######  
+
+	public int numCakes() {
+		int count = 0;
+		for (int d = 0; d < data.length; d++) {
+			for (int r = 0; r < data[d].length; r++) {
+				for (int c = 0; c < data[d][r].length; c++) {
+					if (data[d][r][c].equals("C")) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+
+	public Position locateKurby(int roomNum) {
+		for (int r = 0; r < data[roomNum].length; r++) {
+			for (int c = 0; c < data[roomNum][r].length; c++) {
+				if (data[roomNum][r][c].equals("K")) {
+					return data[roomNum][r][c];
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public Position get(int room, int row, int col) {
+		try {
+			return data[room][row][col];
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+}
+
+class Position {
+	int room, row, col;
+	char value;
+	boolean visited;
+
+	public Position(int room, int row, int col, char value) {
+		this.room = room;
+		this.row = row;
+		this.col = col;
+		this.value = value;
+		this.visited = false;
+	}
+
+	public Position(int room, int row, int col, String value) {
+		this(room, row, col, value.charAt(0));
+	}
+
+	public boolean equals(String check) {
+		return (value + "").equals(check);
+	}
+
+	public String toString() {
+		return "Space at room#" + room + " " + row + "," + col + " is " + value + " and " + (visited ? "not " : "")
+				+ "visited";
 	}
 }
