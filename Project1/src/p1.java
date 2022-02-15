@@ -97,6 +97,12 @@ public class p1 {
 
 			//
 
+			PathFinder f = new PathFinder();
+
+			f.find(m);
+
+			System.out.println(m);
+
 			if (printTime) {
 				System.out.println("Elapsed time = " + (System.currentTimeMillis() - start) / 1000);
 			}

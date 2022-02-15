@@ -193,6 +193,14 @@ class Position {
 	char value;
 	boolean visited;
 
+	public Position() {
+		this.room = -1;
+		this.row = -1;
+		this.col = -1;
+		this.value = " ".charAt(0);
+		this.visited = false;
+	}
+
 	public Position(int room, int row, int col, char value) {
 		this.room = room;
 		this.row = row;
@@ -210,7 +218,7 @@ class Position {
 	}
 
 	public String toString() {
-		return "Space at room#" + room + " " + row + "," + col + " is " + value + " and " + (visited ? "not " : "")
+		return "Space at room#" + room + " " + row + "," + col + " is " + value + " and " + (visited ? "" : "not ")
 				+ "visited";
 	}
 }

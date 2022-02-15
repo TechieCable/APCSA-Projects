@@ -11,32 +11,49 @@ public class PathFinder {
 
 		q1.add(m.locateKurby(0));
 
-		Position prev, n, s, e, w;
+		Position prev, current;
 
-		boolean foundCake;
+		boolean end = false;
 
-		while (true) {
+		int count = 0;
+
+		while (!end) {
+			count++;
 			prev = q1.remove();
 			q2.add(prev);
 
-			n = m.get(prev.room, prev.row - 1, prev.col);
-			s = m.get(prev.room, prev.row + 1, prev.col);
-			e = m.get(prev.room, prev.row, prev.col + 1);
-			w = m.get(prev.room, prev.row, prev.col - 1);
+			for (int i = 0; i < 4; i++) {
+				// N S E W
+				if (i == 0) {
+					current = m.get(prev.room, prev.row - 1, prev.col);
+				} else if (i == 1) {
+					current = m.get(prev.room, prev.row + 1, prev.col);
+				} else if (i == 2) {
+					current = m.get(prev.room, prev.row, prev.col + 1);
+				} else { // i == 3
+					current = m.get(prev.room, prev.row, prev.col - 1);
+				}
 
-			if (n != null && !n.visited) {
-				if (n.equals("."))
-					q1.add(n);
-				if (n.equals("C"))
-					q1.add(n);
-				n.visited = true;
+				if (current != null && !current.visited) {
+					if (current.equals(".")) {
+						q1.add(current);
+					}
+					if (current.equals("C")) {
+						q1.add(current);
+						end = true;
+					}
+
+					current.visited = true;
+				}
 			}
 
-			// N S E W
+		}
+
+		while (q2.size() > 0) {
+			q2.remove().value = "+".charAt(0);
 		}
 
 		return m;
-
 	}
 
 }
