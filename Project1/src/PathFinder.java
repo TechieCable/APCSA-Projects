@@ -1,24 +1,46 @@
-
 public class PathFinder {
 
-	public Map find(Map m) {
-		if (m.locateKurby(0) == null) {
-			return null;
+	public void find(Map m, int method) {
+		for (int i = 0; i < m.rooms; i++) {
+			if (method == 1) {
+				stackFind(m, i);
+			} else if (method == 2) {
+				queueFind(m, i);
+			} else if (method == 3) {
+				// optimal
+			}
 		}
+	}
 
+	public void stackFind(Map m, int roomNum) {
+
+	}
+
+	public void queueFind(Map m, int roomNum) {
+		if (m.locateKurby(roomNum) == null) {
+			System.out.println("|                 Error                  |");
+			System.out.println("|                                        |");
+			System.out.println("| Kurby could not be found on level " + roomNum + "    |");
+			System.out.println("| Check the map file                     |");
+			System.out.println("|                                        |");
+			System.exit(-1);
+		}
+		
+		System.out.println(m.printRoom(roomNum));
+
+		// enqueue
 		Queue q1 = new Queue();
+		// dequeue
 		Queue q2 = new Queue();
 
 		q1.add(m.locateKurby(0));
+		q1.peek().visited = true;
 
 		Position prev, current;
 
 		boolean end = false;
 
-		int count = 0;
-
 		while (!end) {
-			count++;
 			prev = q1.remove();
 			q2.add(prev);
 
@@ -41,19 +63,25 @@ public class PathFinder {
 					if (current.equals("C")) {
 						q1.add(current);
 						end = true;
+						break;
+					}
+					if (current.equals("|")) {
+						q1.add(current);
+						end = true;
+						break;
 					}
 
 					current.visited = true;
 				}
 			}
-
 		}
 
 		while (q2.size() > 0) {
-			q2.remove().value = "+".charAt(0);
+			Position temp = q2.remove();
+			if (temp.equals(".")) {
+				temp.value = "+".charAt(0);
+			}
 		}
-
-		return m;
 	}
 
 }

@@ -98,15 +98,20 @@ public class Map {
 		m += "Tower with " + rooms + " " + rows + "x" + cols + " room" + (rooms > 1 ? "s" : "");
 		m += " and " + numCakes() + " cake" + (numCakes() > 1 ? "s" : "") + "\n";
 		for (int d = 0; d < data.length; d++) {
-			m += "Room#" + d + "\n";
-			for (int r = 0; r < data[d].length; r++) {
-				for (int c = 0; c < data[d][r].length; c++) {
-					m += data[d][r][c].value + "";
-				}
-				m += "\n";
-			}
+			m += printRoom(d);
 		}
+		return m;
+	}
 
+	public String printRoom(int roomNum) {
+		String m = "";
+		m += "Room#" + roomNum + "\n";
+		for (int r = 0; r < data[roomNum].length; r++) {
+			for (int c = 0; c < data[roomNum][r].length; c++) {
+				m += data[roomNum][r][c].value + "";
+			}
+			m += "\n";
+		}
 		return m;
 	}
 

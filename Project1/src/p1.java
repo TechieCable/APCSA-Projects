@@ -59,11 +59,11 @@ public class p1 {
 		}
 
 		int method = 0;
-		if (commandM == 1) {
+		if (commandM == 1) { // stack
 			method = 1;
-		} else if (commandM == 2) {
+		} else if (commandM == 2) { // queue
 			method = 2;
-		} else if (commandM == 4) {
+		} else if (commandM == 4) { // optimal
 			method = 3;
 		}
 
@@ -78,7 +78,7 @@ public class p1 {
 			System.exit(-1);
 		}
 
-		int mapNum = 5;
+		int mapNum = 3;
 
 		try {
 			// parameter variables available
@@ -91,43 +91,32 @@ public class p1 {
 
 			Map m = new Map(scan, inType);
 
-			System.out.println(m);
+//			System.out.println(m);
+
+			System.out.println("|                                        |");
+			System.out
+					.println("| Finding path with " + ((method == 1) ? "Stack" : ((method == 2) ? "Queue" : "Optimal"))
+							+ "          ".substring(
+									((method == 1) ? "Stack" : ((method == 2) ? "Queue" : "Optimal")).length())
+							+ "           |");
+			System.out.println("|                                        |");
 
 			long start = System.currentTimeMillis();
 
-			//
-
 			PathFinder f = new PathFinder();
 
-			f.find(m);
+			f.find(m, method);
 
 			System.out.println(m);
 
 			if (printTime) {
-				System.out.println("Elapsed time = " + (System.currentTimeMillis() - start) / 1000);
+				System.out.println("|                                        |");
+				System.out.println("|      elapsed time = " + ((System.currentTimeMillis() - start) / 1000)
+						+ "                   ".substring((((System.currentTimeMillis() - start) / 1000) + "").length())
+						+ "|");
+				System.out.println("|                                        |");
 			}
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
-// .
+
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
 		}
