@@ -20,20 +20,19 @@ public class PathFinder {
 		if (m.locateKurby(roomNum) == null) {
 			System.out.println("|                 Error                  |");
 			System.out.println("|                                        |");
-			System.out.println("| Kurby could not be found on level " + roomNum + "    |");
+			System.out.println(
+					"| Kurby could not be found on level " + roomNum + "   ".substring((roomNum + "").length()) + " |");
 			System.out.println("| Check the map file                     |");
 			System.out.println("|                                        |");
 			System.exit(-1);
 		}
-		
-		System.out.println(m.printRoom(roomNum));
 
 		// enqueue
 		Queue q1 = new Queue();
 		// dequeue
 		Queue q2 = new Queue();
 
-		q1.add(m.locateKurby(0));
+		q1.add(m.locateKurby(roomNum));
 		q1.peek().visited = true;
 
 		Position prev, current;
@@ -61,12 +60,10 @@ public class PathFinder {
 						q1.add(current);
 					}
 					if (current.equals("C")) {
-						q1.add(current);
 						end = true;
 						break;
 					}
 					if (current.equals("|")) {
-						q1.add(current);
 						end = true;
 						break;
 					}

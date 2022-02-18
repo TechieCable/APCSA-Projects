@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class p1 {
 
 	public static void main(String[] args) {
+		String x = "";
 
 		int commandM = 0;
 		boolean printTime = true;
@@ -87,18 +88,23 @@ public class p1 {
 			// inType = true:coordinate, false:map
 			// outType = true:coordinate, false:map
 
-			Scanner scan = new Scanner(new File("cable-map" + mapNum + (inType ? "-cor" : "") + ".txt"));
+			Map m = new Map(new Scanner(new File("cable-map" + mapNum + (inType ? "-cor" : "") + ".txt")), inType);
 
-			Map m = new Map(scan, inType);
+			System.out.println("");
+			for (int i = 0; i < m.rooms; i++) {
+				System.out.println(m.printRoom(i));
+			}
 
-//			System.out.println(m);
+			if (m.numCakes() == 0) {
+				System.out.println("|                 Error                  |");
+				System.out.println("|                                        |");
+				System.out.println("| No cakes found on the map              |");
+				System.out.println("|                                        |");
+				System.exit(-1);
+			}
 
-			System.out.println("|                                        |");
-			System.out
-					.println("| Finding path with " + ((method == 1) ? "Stack" : ((method == 2) ? "Queue" : "Optimal"))
-							+ "          ".substring(
-									((method == 1) ? "Stack" : ((method == 2) ? "Queue" : "Optimal")).length())
-							+ "           |");
+			x = ((method == 1) ? "Stack" : ((method == 2) ? "Queue" : "Optimal"));
+			System.out.println("| Finding path with " + x + "          ".substring(x.length()) + "           |");
 			System.out.println("|                                        |");
 
 			long start = System.currentTimeMillis();
@@ -107,13 +113,14 @@ public class p1 {
 
 			f.find(m, method);
 
-			System.out.println(m);
+			System.out.println("");
+			for (int i = 0; i < m.rooms; i++) {
+				System.out.println(m.printRoom(i));
+			}
 
+			x = "" + ((System.currentTimeMillis() - start) / 1000);
 			if (printTime) {
-				System.out.println("|                                        |");
-				System.out.println("|      elapsed time = " + ((System.currentTimeMillis() - start) / 1000)
-						+ "                   ".substring((((System.currentTimeMillis() - start) / 1000) + "").length())
-						+ "|");
+				System.out.println("| elapsed time = " + x + "                       ".substring(x.length()) + " |");
 				System.out.println("|                                        |");
 			}
 
