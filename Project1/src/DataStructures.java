@@ -1,19 +1,34 @@
 import java.util.ArrayList;
 
 public class DataStructures {
+	protected int size;
+
+	public int size() {
+		return size;
+	}
+
+	public void push(Position elem) {
+	}
+
+	public Position pop() {
+		return null;
+	}
+
+	public Position peek() {
+		return null;
+	}
+
+	public String toString() {
+		return null;
+	}
 }
 
-class Stack {
+class Stack extends DataStructures {
 	private ArrayList<Position> data;
-	private int size; // # elements
 
 	public Stack() {
 		data = new ArrayList<Position>();
 		size = 0;
-	}
-
-	public int size() {
-		return size;
 	}
 
 	// push - add element to top of list
@@ -57,9 +72,8 @@ class Stack {
 
 }
 
-class Queue {
+class Queue extends DataStructures {
 	private Stack in, out;
-	private int size;
 
 	public Queue() {
 		in = new Stack();
@@ -67,12 +81,12 @@ class Queue {
 		size = 0;
 	}
 
-	public void add(Position elem) {
+	public void push(Position elem) {
 		in.push(elem);
 		size++;
 	}
 
-	public Position remove() {
+	public Position pop() {
 		if (in.size() == 0 && out.size() == 0) {
 			return null;
 		}
@@ -86,21 +100,6 @@ class Queue {
 		// increment size and pop element
 		size--;
 		return out.pop();
-	}
-
-	public int size() {
-		return size;
-	}
-
-	public String toString() {
-		if (in.size() > 0 && out.size() > 0) {
-			return "in: " + in + ", out: " + out;
-		} else if (in.size() > 0) {
-			return "in: " + in;
-		} else if (out.size() > 0) {
-			return "out: " + out;
-		}
-		return "no data";
 	}
 
 	public Position peek() {
@@ -117,6 +116,17 @@ class Queue {
 		Position res = out.pop();
 		out.push(res);
 		return res;
+	}
+
+	public String toString() {
+		if (in.size() > 0 && out.size() > 0) {
+			return "in: " + in + ", out: " + out;
+		} else if (in.size() > 0) {
+			return "in: " + in;
+		} else if (out.size() > 0) {
+			return "out: " + out;
+		}
+		return "no data";
 	}
 
 }

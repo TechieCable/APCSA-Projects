@@ -79,7 +79,7 @@ public class p1 {
 			System.exit(-1);
 		}
 
-		int mapNum = 3;
+		int mapNum = 5;
 
 		try {
 			// parameter variables available
@@ -89,27 +89,21 @@ public class p1 {
 			// outType = true:coordinate, false:map
 
 			Map m = new Map(new Scanner(new File("cable-map" + mapNum + (inType ? "-cor" : "") + ".txt")), inType);
+			PathFinder f = new PathFinder();
 
+			// print map before finding path
 			System.out.println("");
 			for (int i = 0; i < m.rooms; i++) {
 				System.out.println(m.printRoom(i));
 			}
 
-			if (m.numCakes() == 0) {
-				System.out.println("|                 Error                  |");
-				System.out.println("|                                        |");
-				System.out.println("| No cakes found on the map              |");
-				System.out.println("|                                        |");
-				System.exit(-1);
-			}
-
-			x = ((method == 1) ? "Stack" : ((method == 2) ? "Queue" : "Optimal"));
+			// print method
+			x = ((method == 1) ? "stack" : ((method == 2) ? "queue" : "optimal"));
 			System.out.println("| Finding path with " + x + "          ".substring(x.length()) + "           |");
 			System.out.println("|                                        |");
 
+			// start timer
 			long start = System.currentTimeMillis();
-
-			PathFinder f = new PathFinder();
 
 			f.find(m, method);
 
@@ -118,6 +112,7 @@ public class p1 {
 				System.out.println(m.printRoom(i));
 			}
 
+			// print path finding runtime
 			x = "" + ((System.currentTimeMillis() - start) / 1000);
 			if (printTime) {
 				System.out.println("| elapsed time = " + x + "                       ".substring(x.length()) + " |");

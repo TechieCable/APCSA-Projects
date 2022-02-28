@@ -6,10 +6,6 @@ public class Map {
 	int rows;
 	int cols;
 
-	// rows, columns, rooms
-
-	// data[0] = {{".","."},{".","."}}
-
 //  ########  ########   #######   ######  ########  ######   ######  #### ##    ##  ######   
 //  ##     ## ##     ## ##     ## ##    ## ##       ##    ## ##    ##  ##  ###   ## ##    ##  
 //  ##     ## ##     ## ##     ## ##       ##       ##       ##        ##  ####  ## ##        
@@ -18,6 +14,15 @@ public class Map {
 //  ##        ##    ##  ##     ## ##    ## ##       ##    ## ##    ##  ##  ##   ### ##    ##  
 //  ##        ##     ##  #######   ######  ########  ######   ######  #### ##    ##  ######   
 
+	/**
+	 * Map Constructor
+	 * 
+	 * fills a map with empty spaces given on the size of the map
+	 * 
+	 * @param rows
+	 * @param cols
+	 * @param rooms
+	 */
 	public Map(int rows, int cols, int rooms) {
 		this.rooms = rooms;
 		this.rows = rows;
@@ -35,8 +40,13 @@ public class Map {
 		}
 	}
 
-	/*
+	/**
+	 * Map Constructor
+	 * 
 	 * takes a scan with a map file and processes it
+	 * 
+	 * @param scan
+	 * @param inType - map or coordinate mode
 	 */
 	public Map(Scanner scan, boolean inType) {
 		this(scan.nextInt(), scan.nextInt(), scan.nextInt());
@@ -44,6 +54,14 @@ public class Map {
 		processMap(scan, inType);
 	}
 
+	/**
+	 * processMap
+	 * 
+	 * processes a map file scan given the mode
+	 * 
+	 * @param scan
+	 * @param inType
+	 */
 	public void processMap(Scanner scan, boolean inType) {
 		int d = 0; // room number
 		if (inType) {
@@ -93,6 +111,13 @@ public class Map {
 //  ##        ##    ##   ##  ##   ###    ##       ##     ## ##     ##    ##    ##    ## 
 //  ##        ##     ## #### ##    ##    ##        #######   #######     ##     ######  
 
+	/**
+	 * toString
+	 * 
+	 * returns map information and all rooms
+	 * 
+	 * @return map
+	 */
 	public String toString() {
 		String m = "";
 		m += "Tower with " + rooms + " " + rows + "x" + cols + " room" + (rooms > 1 ? "s" : "");
@@ -103,6 +128,14 @@ public class Map {
 		return m;
 	}
 
+	/**
+	 * printRoom
+	 * 
+	 * returns a given room on the map
+	 * 
+	 * @param roomNum
+	 * @return room
+	 */
 	public String printRoom(int roomNum) {
 		String m = "";
 		m += "Room#" + roomNum + "\n";
@@ -115,6 +148,14 @@ public class Map {
 		return m;
 	}
 
+	/**
+	 * printMap
+	 * 
+	 * return a map given map or coordinate method
+	 * 
+	 * @param method
+	 * @return map
+	 */
 	public String printMap(boolean method) {
 		String m = "";
 		m += rows + " " + cols + " " + rooms + "\n";
@@ -126,6 +167,14 @@ public class Map {
 		}
 	}
 
+	/**
+	 * map
+	 * 
+	 * return a map in map mode given a starter string
+	 * 
+	 * @param m
+	 * @return map
+	 */
 	private String map(String m) {
 		for (int d = 0; d < data.length; d++) {
 			for (int r = 0; r < data[d].length; r++) {
@@ -138,6 +187,14 @@ public class Map {
 		return m;
 	}
 
+	/**
+	 * cors
+	 * 
+	 * return a map in coordinate mode given a starter string
+	 * 
+	 * @param m
+	 * @return map
+	 */
 	private String cors(String m) {
 		for (int d = 0; d < data.length; d++) {
 			for (int r = 0; r < data[d].length; r++) {
@@ -157,6 +214,13 @@ public class Map {
 //  ##       ##     ## ##    ## ##     ##    ##     ##  ##     ## ##   ### ##    ## 
 //  ########  #######   ######  ##     ##    ##    ####  #######  ##    ##  ######  
 
+	/**
+	 * numCakes
+	 * 
+	 * get the number of cakes in a map
+	 * 
+	 * @return cakeCount
+	 */
 	public int numCakes() {
 		int count = 0;
 		for (int d = 0; d < data.length; d++) {
@@ -171,6 +235,14 @@ public class Map {
 		return count;
 	}
 
+	/**
+	 * locateKurby
+	 * 
+	 * returns Kurby's position in a given room or null
+	 * 
+	 * @param roomNum
+	 * @return kurbyPosition
+	 */
 	public Position locateKurby(int roomNum) {
 		for (int r = 0; r < data[roomNum].length; r++) {
 			for (int c = 0; c < data[roomNum][r].length; c++) {
@@ -183,6 +255,16 @@ public class Map {
 		return null;
 	}
 
+	/**
+	 * get
+	 * 
+	 * returns a given position
+	 * 
+	 * @param room
+	 * @param row
+	 * @param col
+	 * @return position
+	 */
 	public Position get(int room, int row, int col) {
 		try {
 			return data[room][row][col];
@@ -198,6 +280,11 @@ class Position {
 	char value;
 	boolean visited;
 
+	/**
+	 * Position Constructor
+	 * 
+	 * sets all values to defaults
+	 */
 	public Position() {
 		this.room = -1;
 		this.row = -1;
@@ -206,6 +293,16 @@ class Position {
 		this.visited = false;
 	}
 
+	/**
+	 * Position Constructor
+	 * 
+	 * sets values based on passed values
+	 * 
+	 * @param room
+	 * @param row
+	 * @param col
+	 * @param value
+	 */
 	public Position(int room, int row, int col, char value) {
 		this.room = room;
 		this.row = row;
@@ -214,14 +311,39 @@ class Position {
 		this.visited = false;
 	}
 
+	/**
+	 * Position Constructor
+	 * 
+	 * sets values based on passed values, accepts String value instead of char
+	 * 
+	 * @param room
+	 * @param row
+	 * @param col
+	 * @param value
+	 */
 	public Position(int room, int row, int col, String value) {
 		this(room, row, col, value.charAt(0));
 	}
 
+	/**
+	 * equals
+	 * 
+	 * checks if the position's value matches a passed value
+	 * 
+	 * @param check
+	 * @return isEqual
+	 */
 	public boolean equals(String check) {
 		return (value + "").equals(check);
 	}
 
+	/**
+	 * toString
+	 * 
+	 * returns information about the position
+	 * 
+	 * @return positionInfo
+	 */
 	public String toString() {
 		return "Space at room#" + room + " " + row + "," + col + " is " + value + " and " + (visited ? "" : "not ")
 				+ "visited";
