@@ -11,7 +11,7 @@ public class Recursion extends JPanel implements ActionListener {
 
 	static int screenL = 1000;
 	static final double pi = Math.PI;
-	int branchHue = 0;
+	int panelHue = 0;
 
 	/**
 	 * converts HSV to Color object
@@ -33,6 +33,10 @@ public class Recursion extends JPanel implements ActionListener {
 		return new Color(r, g, b);
 	}
 
+	public double rad(int degrees) {
+		return degrees * pi / 180;
+	}
+
 	/**
 	 * draws concentric circles
 	 * 
@@ -41,15 +45,15 @@ public class Recursion extends JPanel implements ActionListener {
 	 * @param x
 	 * @param y
 	 */
-	public void concentricCircles(Graphics g, int width, int x, int y, int delta) {
+	public void concentricCircles(Graphics g, int width, int x, int y, int delta, int hue) {
 		if (width < 1) {
 			return;
 		}
 
-		g.setColor(Color.BLUE);
+		g.setColor(hsv2C(hue, 100, 100));
 		g.drawOval(x, y, width, width);
 
-		concentricCircles(g, width - delta, x + delta / 2, y + delta / 2, delta);
+		concentricCircles(g, width - delta, x + delta / 2, y + delta / 2, delta, hue + 30);
 	}
 
 	/**
@@ -102,18 +106,18 @@ public class Recursion extends JPanel implements ActionListener {
 	 * @param y
 	 * @param width
 	 */
-	public void clover(Graphics g, int x, int y, int width) {
+	public void clover(Graphics g, int x, int y, int width, int hue) {
 		if (width < 1) {
 			return;
 		}
-		g.setColor(Color.GREEN);
+		g.setColor(hsv2C(hue, 100, 100));
 
 		g.drawOval(x - width, y - width, width, width);
 		g.drawOval(x, y - width, width, width);
 		g.drawOval(x, y, width, width);
 		g.drawOval(x - width, y, width, width);
 
-		clover(g, x, y, width - 5);
+		clover(g, x, y, width - 5, hue + 30);
 
 	}
 
@@ -141,7 +145,6 @@ public class Recursion extends JPanel implements ActionListener {
 			return;
 		}
 
-		// 3pi/12, 5pi/12, 7pi/12, 9pi/12
 		// -3pi/12, -1pi/12, 1pi/12, 3pi/12
 
 		// i goes from -3 to 3
@@ -155,28 +158,83 @@ public class Recursion extends JPanel implements ActionListener {
 
 	}
 
+	public void fancyFlower(Graphics g, int x, int y, int length, double angle, int hue) {
+		if (length < 1) {
+			return;
+		}
+
+		// -3pi/12, -1pi/12, 1pi/12, 3pi/12
+
+		// i goes from -1 to 1
+		for (int i = -3; i < 7; i += 2) {
+			int x2 = x + (int) (length * Math.cos(angle + i * pi / 5));
+			int y2 = y - (int) (length * Math.sin(angle + i * pi / 5));
+			g.setColor(hsv2C(hue, 100, 100));
+			g.drawLine(x, y, x2, y2);
+			fancyFlower(g, x2, y2, length / 2, angle + i * pi / 5, hue + 30);
+		}
+
+	}
+
+	// uses angles in degrees for greater accuracy
+	public void circleOSquares(Graphics g, int x, int y, int a, int hue) {
+		if (a > 360) {
+			return;
+		}
+
+		g.setColor(Color.WHITE);
+		g.drawRect(x + (int) (150 * Math.cos(a)), y + (int) (150 * Math.sin(a)), 300, 300);
+		circleOSquares(g, x, y, a + 10, hue + 10);
+	}
+
+	// uses angles in degrees for greater accuracy
+	public void magicCircle(Graphics g, int x, int y, int a) {
+		if (a > 360) {
+			return;
+		}
+		int dx = (int) (150 * Math.cos(rad(a))), dy = (int) (150 * Math.sin(rad(a)));
+
+		g.setColor(Color.RED);
+		g.drawOval(x + 150 - a * 5 / 6, y + 150 - a * 5 / 6, a * 5 / 3, a * 5 / 3);
+
+		g.setColor(Color.MAGENTA);
+		g.drawLine(x + 150, y + 150, x + 150 + 2 * dx, y + 150 + 2 * dy);
+
+		g.setColor(Color.CYAN);
+		g.drawOval(x + dx, y + dy, 300, 300);
+
+		magicCircle(g, x, y, a + 5);
+
+	}
+
 	public void paint(Graphics g) {
 		screenL = this.getHeight();
 
 		g.setColor(Color.black);
 		g.fillRect(0, 0, 1000, 1000);
-
 		g.setColor(Color.WHITE);
 
-//		concentricCircles(g, 500, screenL / 2 - 250, screenL / 2 - 250, 10);
+//		concentricCircles(g, 1000, screenL / 2 - 500, screenL / 2 - 500, 10, panelHue);
 
-//		g.setColor(Color.ORANGE);
 //		squares(g, screenL / 2 - 150, screenL / 2 - 150, 300);
 
-//		clover(g, 500, 500, 500);
+//		clover(g, 500, 500, 500, panelHue);
 
-//		flake(g, screenL / 2, screenL / 2, 400, 0);
+//		flake(g, screenL / 2, screenL / 2, 400, panelHue);
 
-		g.setColor(hsv2C(branchHue, 100, 100));
-		g.drawLine(screenL / 2, screenL - 50, screenL / 2, screenL - 350);
-		treeBranch(g, screenL / 2, screenL - 350, 150, pi / 2, branchHue + 30);
+//		g.setColor(hsv2C(panelHue, 100, 100));
+//		g.drawLine(screenL / 2, screenL - 50, screenL / 2, screenL - 350);
+//		treeBranch(g, screenL / 2, screenL - 350, 150, pi / 2, panelHue + 30);
+//		fancyFlower(g, screenL / 2, screenL - 350, 150, pi / 2, panelHue + 30);
 
-		branchHue++;
+//		circleOSquares(g, 200, 200, 0, 0);
+
+		magicCircle(g, 200, 200, 0);
+
+		panelHue++;
+		if (panelHue > 360) {
+			panelHue %= 360;
+		}
 	}
 
 	public static void main(String[] arg) {
