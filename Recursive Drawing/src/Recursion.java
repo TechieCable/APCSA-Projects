@@ -9,7 +9,7 @@ import javax.swing.Timer;
 
 public class Recursion extends JPanel implements ActionListener {
 
-	static int screenL = 1000;
+	static int screenH = 1000, screenW = 1000;
 	static final double pi = Math.PI;
 	int panelHue = 0;
 
@@ -207,31 +207,53 @@ public class Recursion extends JPanel implements ActionListener {
 
 	}
 
+	public void centeredCircle(Graphics g, int x, int y, int radius) {
+		g.drawOval(x - radius / 2, y - radius / 2, radius, radius);
+	}
+
+	public void expandingCircle(Graphics g, double x, double y, double radius, int hue) {
+		if (radius < 5) { // 10
+			return;
+		}
+
+		g.setColor(hsv2C(hue, 100, 100));
+		centeredCircle(g, (int) x, (int) y, (int) radius);
+
+		int a = 6;
+		for (int i = 0; i < a; i++) {
+			expandingCircle(g, x + ((radius * 3 / 4) * Math.cos(i * 2 * pi / a)),
+					y + ((radius * 3 / 4) * Math.sin(i * 2 * pi / a)), radius / 2.0, hue + 30);
+		}
+	}
+
 	public void paint(Graphics g) {
-		screenL = this.getHeight();
+		screenH = this.getHeight();
+		screenW = this.getWidth();
 
 		g.setColor(Color.black);
-		g.fillRect(0, 0, 1000, 1000);
+		g.fillRect(0, 0, screenW, screenH);
 		g.setColor(Color.WHITE);
 
-//		concentricCircles(g, 1000, screenL / 2 - 500, screenL / 2 - 500, 10, panelHue);
+//		concentricCircles(g, 1000, screenW / 2 - 500, screenH / 2 - 500, 10, panelHue);
 
-//		squares(g, screenL / 2 - 150, screenL / 2 - 150, 300);
+//		squares(g, screenW / 2 - 150, screenH / 2 - 150, 300);
 
-//		clover(g, 500, 500, 500, panelHue);
+//		clover(g, screenW / 2, screenH / 2, 500, panelHue);
 
-//		flake(g, screenL / 2, screenL / 2, 400, panelHue);
+//		flake(g, screenW / 2, screenH / 2, 400, panelHue);
 
 //		g.setColor(hsv2C(panelHue, 100, 100));
-//		g.drawLine(screenL / 2, screenL - 50, screenL / 2, screenL - 350);
-//		treeBranch(g, screenL / 2, screenL - 350, 150, pi / 2, panelHue + 30);
-//		fancyFlower(g, screenL / 2, screenL - 350, 150, pi / 2, panelHue + 30);
+//		g.drawLine(screenW / 2, screenH - 50, screenW / 2, screenH - 350);
+//		treeBranch(g, screenW / 2, screenH - 400, 150, pi / 2, panelHue + 30);
+//		fancyFlower(g, screenW / 2, screenH - 400, 150, pi / 2, panelHue + 30);
 
-//		circleOSquares(g, 200, 200, 0, 0);
+//		circleOSquares(g, screenW / 2, screenH / 2, 0, 0);
 
-		magicCircle(g, 200, 200, 0);
+//		magicCircle(g, screenW / 2, screenH / 2, 0);
 
-		panelHue++;
+		expandingCircle(g, screenW / 2, screenH / 2, 500, panelHue);
+
+		panelHue += 10;
 		if (panelHue > 360) {
 			panelHue %= 360;
 		}
@@ -245,7 +267,7 @@ public class Recursion extends JPanel implements ActionListener {
 	public Recursion() {
 		JFrame f = new JFrame("Recursive Methods");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(1000, 1000);
+		f.setSize(1920, 1080);
 		f.add(this);
 		t.start();
 
