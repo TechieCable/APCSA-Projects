@@ -12,6 +12,7 @@ public class Recursion extends JPanel implements ActionListener {
 	static int screenH = 1000, screenW = 1000;
 	static final double pi = Math.PI;
 	int panelHue = 0;
+	int cStartA = 0;
 
 	/**
 	 * converts HSV to Color object
@@ -140,6 +141,22 @@ public class Recursion extends JPanel implements ActionListener {
 		}
 	}
 
+	public void tree(Graphics g, int x, int y, int length, int hue) {
+		// x, y value is base of tree
+
+		g.setColor(hsv2C(panelHue - 20, 100, 100));
+		g.drawLine(x, y, x, y - (length / 3));
+
+		g.setColor(hsv2C(panelHue - 10, 100, 100));
+		g.drawLine(x, y - (length / 3), x, y - (length * 2 / 3));
+
+		g.setColor(hsv2C(panelHue, 100, 100));
+		g.drawLine(x, y - (length * 2 / 3), x, y - (length));
+
+		treeBranch(g, x, y - length, length / 2, pi / 2, hue + 30);
+	}
+
+	@SuppressWarnings("unused")
 	public void treeBranch(Graphics g, int x, int y, int length, double angle, int hue) {
 		if (length < 1) {
 			return;
@@ -149,11 +166,26 @@ public class Recursion extends JPanel implements ActionListener {
 
 		// i goes from -3 to 3
 		for (int i = -3; i < 5; i += 2) {
-			int x2 = x + (int) (length * Math.cos(angle + i * pi / 12));
-			int y2 = y - (int) (length * Math.sin(angle + i * pi / 12));
-			g.setColor(hsv2C(hue, 100, 100));
-			g.drawLine(x, y, x2, y2);
-			treeBranch(g, x2, y2, length / 2, angle + i * pi / 12, hue + 30);
+			double angleX = length * Math.cos(angle + i * pi / 12);
+			double angleY = length * Math.sin(angle + i * pi / 12);
+
+			if (length > 10) {
+				g.setColor(hsv2C(hue - 20, 100, 100));
+				g.drawLine(x, y, x + (int) (angleX / 3), y - (int) (angleY / 3));
+
+				g.setColor(hsv2C(hue - 10, 100, 100));
+				g.drawLine(x + (int) (angleX / 3), y - (int) (angleY / 3), x + (int) (angleX * 2 / 3),
+						y - (int) (angleY * 2 / 3));
+
+				g.setColor(hsv2C(hue, 100, 100));
+				g.drawLine(x + (int) (angleX * 2 / 3), y - (int) (angleY * 2 / 3), x + (int) (angleX),
+						y - (int) (angleY));
+			} else {
+				g.setColor(hsv2C(hue, 100, 100));
+				g.drawLine(x, y, x + (int) (angleX), y - (int) (angleY));
+			}
+
+			treeBranch(g, x + (int) angleX, y - (int) angleY, length / 2, angle + i * pi / 12, hue + 30);
 		}
 
 	}
@@ -212,17 +244,20 @@ public class Recursion extends JPanel implements ActionListener {
 	}
 
 	public void expandingCircle(Graphics g, double x, double y, double radius, int hue) {
-		if (radius < 5) { // 10
+		if (radius < 5) { // 5, 10
 			return;
 		}
 
 		g.setColor(hsv2C(hue, 100, 100));
 		centeredCircle(g, (int) x, (int) y, (int) radius);
 
+		// increments at values of 2pi / a
 		int a = 6;
 		for (int i = 0; i < a; i++) {
-			expandingCircle(g, x + ((radius * 3 / 4) * Math.cos(i * 2 * pi / a)),
-					y + ((radius * 3 / 4) * Math.sin(i * 2 * pi / a)), radius / 2.0, hue + 30);
+			// radius * 0.75 makes all circles touching
+			// try radius *1.5, *0.75
+			expandingCircle(g, x + ((radius * 1.25) * Math.cos(i * pi / (a / 2) + cStartA)),
+					y + ((radius * 1.25) * Math.sin(i * pi / (a / 2) + cStartA)), radius / 2.0, hue + 30);
 		}
 	}
 
@@ -242,9 +277,7 @@ public class Recursion extends JPanel implements ActionListener {
 
 //		flake(g, screenW / 2, screenH / 2, 400, panelHue);
 
-//		g.setColor(hsv2C(panelHue, 100, 100));
-//		g.drawLine(screenW / 2, screenH - 50, screenW / 2, screenH - 350);
-//		treeBranch(g, screenW / 2, screenH - 400, 150, pi / 2, panelHue + 30);
+//		tree(g, screenW / 2, screenH - 10, 500, panelHue);
 //		fancyFlower(g, screenW / 2, screenH - 400, 150, pi / 2, panelHue + 30);
 
 //		circleOSquares(g, screenW / 2, screenH / 2, 0, 0);
@@ -253,7 +286,9 @@ public class Recursion extends JPanel implements ActionListener {
 
 		expandingCircle(g, screenW / 2, screenH / 2, 500, panelHue);
 
-		panelHue += 10;
+		cStartA++;
+
+		panelHue += 5;
 		if (panelHue > 360) {
 			panelHue %= 360;
 		}
