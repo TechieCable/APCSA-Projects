@@ -253,11 +253,12 @@ public class Recursion extends JPanel implements ActionListener {
 
 		// increments at values of 2pi / a
 		int a = 6;
+		// dR of 0.75 makes all circles touching
+		// try dR 1.5, 1.25
+		double dR = 0.75;
 		for (int i = 0; i < a; i++) {
-			// radius * 0.75 makes all circles touching
-			// try radius *1.5, *0.75
-			expandingCircle(g, x + ((radius * 1.25) * Math.cos(i * pi / (a / 2) + cStartA)),
-					y + ((radius * 1.25) * Math.sin(i * pi / (a / 2) + cStartA)), radius / 2.0, hue + 30);
+			expandingCircle(g, x + ((radius * dR) * Math.cos(i * pi / (a / 2) + cStartA)),
+					y + ((radius * dR) * Math.sin(i * pi / (a / 2) + cStartA)), radius / 2.0, hue + 30);
 		}
 	}
 
@@ -277,16 +278,19 @@ public class Recursion extends JPanel implements ActionListener {
 
 //		flake(g, screenW / 2, screenH / 2, 400, panelHue);
 
-//		tree(g, screenW / 2, screenH - 10, 500, panelHue);
+		tree(g, screenW / 2, screenH - 10, 500, panelHue);
 //		fancyFlower(g, screenW / 2, screenH - 400, 150, pi / 2, panelHue + 30);
 
 //		circleOSquares(g, screenW / 2, screenH / 2, 0, 0);
 
 //		magicCircle(g, screenW / 2, screenH / 2, 0);
 
-		expandingCircle(g, screenW / 2, screenH / 2, 500, panelHue);
+//		expandingCircle(g, screenW / 2, screenH / 2, 200, panelHue);
 
 		cStartA++;
+		if (cStartA > 360) {
+			cStartA %= 360;
+		}
 
 		panelHue += 5;
 		if (panelHue > 360) {
