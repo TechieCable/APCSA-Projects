@@ -262,6 +262,28 @@ public class Recursion extends JPanel implements ActionListener {
 		}
 	}
 
+	public void curlingTree(Graphics g, int x, int y, double l, int a, int hue) {
+		if (l < 2)
+			return;
+		if (a > 360)
+			a %= 360;
+		if (hue > 360)
+			hue %= 360;
+
+		g.setColor(hsv2C(hue, 100, 100));
+		g.drawLine(x, y, (int) (x + l * Math.cos(rad(a - 25))), (int) (y - l * Math.sin(rad(a - 25))));
+
+		curlingTree(g, (int) (x + l * Math.cos(rad(a - 25))), (int) (y - l * Math.sin(rad(a - 25))), l * 0.85, a - 25,
+				hue + 30);
+
+		g.setColor(hsv2C(hue, 100, 100));
+		g.drawLine(x, y, (int) (x + l * Math.cos(rad(a + 20))), (int) (y - l * Math.sin(rad(a + 20))));
+
+		curlingTree(g, (int) (x + l * Math.cos(rad(a + 20))), (int) (y - l * Math.sin(rad(a + 20))), l * 0.58, a + 20,
+				hue + 30);
+
+	}
+
 	public void paint(Graphics g) {
 		screenH = this.getHeight();
 		screenW = this.getWidth();
@@ -278,7 +300,7 @@ public class Recursion extends JPanel implements ActionListener {
 
 //		flake(g, screenW / 2, screenH / 2, 400, panelHue);
 
-		tree(g, screenW / 2, screenH - 10, 500, panelHue);
+//		tree(g, screenW / 2, screenH - 10, 500, panelHue);
 //		fancyFlower(g, screenW / 2, screenH - 400, 150, pi / 2, panelHue + 30);
 
 //		circleOSquares(g, screenW / 2, screenH / 2, 0, 0);
@@ -286,6 +308,8 @@ public class Recursion extends JPanel implements ActionListener {
 //		magicCircle(g, screenW / 2, screenH / 2, 0);
 
 //		expandingCircle(g, screenW / 2, screenH / 2, 200, panelHue);
+
+		curlingTree(g, screenW / 2 - 450, screenH - 50, 300, 90, 0);
 
 		cStartA++;
 		if (cStartA > 360) {
