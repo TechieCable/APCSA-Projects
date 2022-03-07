@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class PathFinder {
 
 	public void find(Map m, int method) {
@@ -26,6 +28,7 @@ public class PathFinder {
 				queueFind(m, i);
 			} else if (method == 3) {
 				// optimal
+				stackFind(m, i);
 			}
 		}
 	}
@@ -137,6 +140,70 @@ public class PathFinder {
 				temp.value = "+".charAt(0);
 			}
 		}
+	}
+
+	// TESTING NODE PATH-FINDING
+
+	class PNode extends Position {
+		ArrayList<PNode> next = new ArrayList<PNode>();
+	}
+
+	public void nodeFind(Map m, int roomNum) {
+		DataStructures s1 = new Stack();
+		DataStructures s2 = new Stack();
+
+		s1.push(m.locateKurby(roomNum));
+		s1.peek().visited = true;
+
+		PNode node = (PNode) s1.peek();
+		PNode curr = node;
+		Position prev, current;
+
+		boolean end = false;
+
+		while (!end) {
+			prev = s1.pop();
+			s2.push(prev);
+
+			for (int i = 0; i < 4; i++) {
+				// N S E W
+				if (i == 0) {
+					current = m.get(prev.room, prev.row - 1, prev.col);
+				} else if (i == 1) {
+					current = m.get(prev.room, prev.row + 1, prev.col);
+				} else if (i == 2) {
+					current = m.get(prev.room, prev.row, prev.col + 1);
+				} else { // i == 3
+					current = m.get(prev.room, prev.row, prev.col - 1);
+				}
+
+				if (current != null && !current.visited) {
+					if (current.equals(".")) {
+						s1.push(current);
+					}
+					if (current.equals("C")) {
+						end = true;
+						curr.next.add((PNode) current);
+						break;
+					}
+					if (current.equals("|")) {
+						end = true;
+						break;
+					}
+
+					current.visited = true;
+				}
+			}
+		}
+
+		PNode x = node;
+		while (x != null) {
+			Position temp = s2.pop();
+			if (temp.equals(".")) {
+				temp.value = "+".charAt(0);
+			}
+		}
+
 	}
 
 }

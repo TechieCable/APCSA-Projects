@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class p1 {
 
 	public static void main(String[] args) {
+		// stores random things that need to be printed sometimes
 		String x = "";
 
 		int commandM = 0;
@@ -22,7 +23,7 @@ public class p1 {
 		boolean outType = false;
 
 		System.out.println("|----------------------------------------|");
-		System.out.println("|    Project 1: Kirby's Quest for Cake   |");
+		System.out.println("|   Project 1: Kirby's Quest for Cake    |");
 		System.out.println("|----------------------------------------|");
 		System.out.println("|                                        |");
 
@@ -79,7 +80,7 @@ public class p1 {
 			System.exit(-1);
 		}
 
-		int mapNum = 3;
+		int mapNum = 5;
 
 		try {
 			// parameter variables available
@@ -92,32 +93,31 @@ public class p1 {
 			PathFinder f = new PathFinder();
 
 			// print map before finding path
-			System.out.println("");
-			for (int i = 0; i < m.rooms; i++) {
-				System.out.println(m.printRoom(i));
+			System.out.println(m.printMapFormatted());
+
+			// print the path-finding method being used
+			x = ((method == 1) ? "stack" : ((method == 2) ? "queue" : "optimal"));
+			System.out.println("|----------------------------------------|");
+			System.out.println("| finding path with " + x + "          ".substring(x.length()) + "           |");
+			System.out.println("|----------------------------------------|");
+			System.out.println("|                                        |");
+
+			// start timer
+			long start = System.currentTimeMillis();
+
+			f.find(m, method);
+
+			// print path finding runtime
+			x = "" + ((System.currentTimeMillis() - start) / 1000);
+			if (printTime) {
+				System.out.println("|----------------------------------------|");
+				System.out.println("| path found                             |");
+				System.out.println("| elapsed time: " + x + "                        ".substring(x.length()) + " |");
+				System.out.println("|----------------------------------------|");
+				System.out.println("|                                        |");
 			}
 
-//			// print method
-//			x = ((method == 1) ? "stack" : ((method == 2) ? "queue" : "optimal"));
-//			System.out.println("| Finding path with " + x + "          ".substring(x.length()) + "           |");
-//			System.out.println("|                                        |");
-//
-//			// start timer
-//			long start = System.currentTimeMillis();
-//
-//			f.find(m, method);
-//
-//			System.out.println("");
-//			for (int i = 0; i < m.rooms; i++) {
-//				System.out.println(m.printRoom(i));
-//			}
-//
-//			// print path finding runtime
-//			x = "" + ((System.currentTimeMillis() - start) / 1000);
-//			if (printTime) {
-//				System.out.println("| elapsed time = " + x + "                       ".substring(x.length()) + " |");
-//				System.out.println("|                                        |");
-//			}
+			System.out.println(m.printMapFormatted());
 
 		} catch (FileNotFoundException e) {
 			System.err.println(e);

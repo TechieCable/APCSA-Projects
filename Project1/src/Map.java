@@ -128,6 +128,19 @@ public class Map {
 		return m;
 	}
 
+	public String printMapFormatted() {
+		String res = "";
+		for (int r = 0; r < data.length; r++) {
+			String[] lines = printRoom(r).split("\n");
+			for (int i = 0; i < lines.length; i++) {
+				res += "|   " + lines[i] + "                                    ".substring(lines[i].length()) + " |\n";
+			}
+		}
+		res += "|                                        |";
+
+		return res;
+	}
+
 	/**
 	 * printRoom
 	 * 
