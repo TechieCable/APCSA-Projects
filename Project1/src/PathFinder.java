@@ -2,7 +2,11 @@ import java.util.ArrayList;
 
 public class PathFinder {
 
-	public void find(Map m, int method) {
+	// walk backwards
+
+	public Map find(Map m, int method) {
+		Map temp = new Map(m.data);
+
 		if (m.numCakes() == 0) {
 			System.out.println("|                 Error                  |");
 			System.out.println("|                                        |");
@@ -23,65 +27,84 @@ public class PathFinder {
 			}
 
 			if (method == 1) {
-				stackFind(m, i);
+				stackFind(temp, i);
 			} else if (method == 2) {
-				queueFind(m, i);
+				queueFind(temp, i);
 			} else if (method == 3) {
-				// optimal
-				stackFind(m, i);
+				Map temp1 = new Map(m.data);
+				stackFind(temp1, i);
+				Map temp2 = new Map(m.data);
+				queueFind(temp2, i);
+				if (temp1.pathLength() < temp2.pathLength()) {
+					temp = temp1;
+				} else {
+					temp = temp1;
+				}
 			}
 		}
+
+		return temp;
 	}
 
 	public void stackFind(Map m, int roomNum) {
 		DataStructures s1 = new Stack();
 		DataStructures s2 = new Stack();
 
-		s1.push(m.locateKurby(roomNum));
-		s1.peek().visited = true;
+		{ // stack loading
+			s1.push(m.locateKurby(roomNum));
+			s1.peek().visited = true;
 
-		Position prev, current;
+			Position prev, current;
 
-		boolean end = false;
+			boolean end = false;
 
-		while (!end) {
-			prev = s1.pop();
-			s2.push(prev);
+			while (!end) {
+				prev = s1.pop();
+				s2.push(prev);
 
-			for (int i = 0; i < 4; i++) {
-				// N S E W
-				if (i == 0) {
-					current = m.get(prev.room, prev.row - 1, prev.col);
-				} else if (i == 1) {
-					current = m.get(prev.room, prev.row + 1, prev.col);
-				} else if (i == 2) {
-					current = m.get(prev.room, prev.row, prev.col + 1);
-				} else { // i == 3
-					current = m.get(prev.room, prev.row, prev.col - 1);
-				}
-
-				if (current != null && !current.visited) {
-					if (current.equals(".")) {
-						s1.push(current);
-					}
-					if (current.equals("C")) {
-						end = true;
-						break;
-					}
-					if (current.equals("|")) {
-						end = true;
-						break;
+				for (int i = 0; i < 4; i++) {
+					// N S E W
+					if (i == 0) {
+						current = m.get(prev.room, prev.row - 1, prev.col);
+					} else if (i == 1) {
+						current = m.get(prev.room, prev.row + 1, prev.col);
+					} else if (i == 2) {
+						current = m.get(prev.room, prev.row, prev.col + 1);
+					} else { // i == 3
+						current = m.get(prev.room, prev.row, prev.col - 1);
 					}
 
-					current.visited = true;
+					if (current != null && !current.visited) {
+						if (current.equals(".")) {
+							s1.push(current);
+						}
+						if (current.equals("C")) {
+							end = true;
+							break;
+						}
+						if (current.equals("|")) {
+							end = true;
+							break;
+						}
+
+						current.visited = true;
+					}
 				}
 			}
-		}
+		} // end stack loading
 
-		while (s2.size() > 0) {
-			Position temp = s2.pop();
-			if (temp.equals(".")) {
-				temp.value = "+".charAt(0);
+		{// path tracing
+			Position prev = s2.pop(), curr;
+			prev.setPath();
+
+			while (s2.size() > 0) {
+				curr = s2.pop();
+				// if not a valid move
+				if (!curr.adjacent(prev))
+					continue;
+
+				curr.setPath();
+				prev = curr;
 			}
 		}
 
@@ -93,53 +116,68 @@ public class PathFinder {
 		// dequeue
 		DataStructures q2 = new Queue();
 
-		q1.push(m.locateKurby(roomNum));
-		q1.peek().visited = true;
+		{ // queue loading
+			q1.push(m.locateKurby(roomNum));
+			q1.peek().visited = true;
 
-		Position prev, current;
+			Position prev, current;
 
-		boolean end = false;
+			boolean end = false;
 
-		while (!end) {
-			prev = q1.pop();
-			q2.push(prev);
+			while (!end) {
+				prev = q1.pop();
+				q2.push(prev);
 
-			for (int i = 0; i < 4; i++) {
-				// N S E W
-				if (i == 0) {
-					current = m.get(prev.room, prev.row - 1, prev.col);
-				} else if (i == 1) {
-					current = m.get(prev.room, prev.row + 1, prev.col);
-				} else if (i == 2) {
-					current = m.get(prev.room, prev.row, prev.col + 1);
-				} else { // i == 3
-					current = m.get(prev.room, prev.row, prev.col - 1);
-				}
-
-				if (current != null && !current.visited) {
-					if (current.equals(".")) {
-						q1.push(current);
-					}
-					if (current.equals("C")) {
-						end = true;
-						break;
-					}
-					if (current.equals("|")) {
-						end = true;
-						break;
+				for (int i = 0; i < 4; i++) {
+					// N S E W
+					if (i == 0) {
+						current = m.get(prev.room, prev.row - 1, prev.col);
+					} else if (i == 1) {
+						current = m.get(prev.room, prev.row + 1, prev.col);
+					} else if (i == 2) {
+						current = m.get(prev.room, prev.row, prev.col + 1);
+					} else { // i == 3
+						current = m.get(prev.room, prev.row, prev.col - 1);
 					}
 
-					current.visited = true;
+					if (current != null && !current.visited) {
+						if (current.equals(".")) {
+							q1.push(current);
+						}
+						if (current.equals("C")) {
+							end = true;
+							break;
+						}
+						if (current.equals("|")) {
+							end = true;
+							break;
+						}
+
+						current.visited = true;
+					}
 				}
 			}
-		}
+		} // end queue loading
 
-		while (q2.size() > 0) {
-			Position temp = q2.pop();
-			if (temp.equals(".")) {
-				temp.value = "+".charAt(0);
+		{ // path tracing
+			Stack s = new Stack();
+			while (q2.size() > 0) {
+				s.push(q2.pop());
 			}
-		}
+
+			Position prev = s.pop(), curr;
+			prev.setPath();
+
+			while (s.size() > 0) {
+				curr = s.pop();
+				// if not a valid move
+				if (!curr.adjacent(prev))
+					continue;
+
+				curr.setPath();
+				prev = curr;
+			}
+		} // end path tracing
 	}
 
 	// TESTING NODE PATH-FINDING

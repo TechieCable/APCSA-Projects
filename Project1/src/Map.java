@@ -54,6 +54,23 @@ public class Map {
 		processMap(scan, inType);
 	}
 
+	public Map(Position[][][] input) {
+		this.rooms = input.length;
+		this.rows = input[0].length;
+		this.cols = input[0][0].length;
+
+		this.data = new Position[this.rooms][this.rows][this.cols];
+
+		for (int d = 0; d < input.length; d++) {
+			for (int r = 0; r < input[d].length; r++) {
+				for (int c = 0; c < input[d][r].length; c++) {
+					// set each position with blank space by default
+					this.data[d][r][c] = new Position(d, r, c, input[d][r][c].value);
+				}
+			}
+		}
+	}
+
 	/**
 	 * processMap
 	 * 
@@ -249,6 +266,25 @@ public class Map {
 	}
 
 	/**
+	 * get the length of the path to the cake
+	 * 
+	 * @return
+	 */
+	public int pathLength() {
+		int count = 0;
+		for (int d = 0; d < data.length; d++) {
+			for (int r = 0; r < data[d].length; r++) {
+				for (int c = 0; c < data[d][r].length; c++) {
+					if (data[d][r][c].equals("+")) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+
+	/**
 	 * locateKurby
 	 * 
 	 * returns Kurby's position in a given room or null
@@ -338,6 +374,12 @@ class Position {
 		this(room, row, col, value.charAt(0));
 	}
 
+	public void setPath() {
+		if (this.equals(".")) {
+			this.value = "+".charAt(0);
+		}
+	}
+
 	/**
 	 * equals
 	 * 
@@ -348,6 +390,38 @@ class Position {
 	 */
 	public boolean equals(String check) {
 		return (value + "").equals(check);
+	}
+
+	/**
+	 * check if a position is adjacent to this position
+	 * 
+	 * @param check
+	 * @return
+	 */
+	public boolean adjacent(Position check) {
+		if (this.room != check.room) {
+			return true;
+		}
+		// must be in the same room from here on
+
+		// check same row
+		if (this.row == check.row) {
+			// check if within one move left/right
+			if (this.col == check.col - 1 || this.col == check.col + 1) {
+				// same row, column left/right once
+				return true;
+			}
+		}
+		// check same column
+		if (this.col == check.col) {
+			// check if within one move up/down
+			if (this.row == check.row - 1 || this.row == check.row + 1) {
+				// same column, row up/down once
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

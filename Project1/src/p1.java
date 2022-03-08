@@ -80,7 +80,7 @@ public class p1 {
 			System.exit(-1);
 		}
 
-		int mapNum = 5;
+		int mapNum = 2;
 
 		try {
 			// parameter variables available
@@ -105,7 +105,7 @@ public class p1 {
 			// start timer
 			long start = System.currentTimeMillis();
 
-			f.find(m, method);
+			Map pathFound = f.find(m, method);
 
 			// print path finding runtime
 			x = "" + ((System.currentTimeMillis() - start) / 1000);
@@ -117,7 +117,7 @@ public class p1 {
 				System.out.println("|                                        |");
 			}
 
-			System.out.println(m.printMapFormatted());
+			System.out.println(pathFound.printMapFormatted());
 
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
