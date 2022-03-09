@@ -15,7 +15,7 @@ public class p1 {
 		String x = "";
 
 		int commandM = 0;
-		boolean printTime = true;
+		boolean doPrintTime = false;
 
 		// true, coordinate mode
 		// false, map mode
@@ -52,7 +52,7 @@ public class p1 {
 			} else if (arg.equals("--Opt")) {
 				commandM += 4;
 			} else if (arg.equals("--Time")) {
-				printTime = true;
+				doPrintTime = true;
 			} else if (arg.equals("--Incoordinate")) {
 				inType = true;
 			} else if (arg.equals("--OutCoordinate")) {
@@ -80,7 +80,7 @@ public class p1 {
 			System.exit(-1);
 		}
 
-		int mapNum = 2;
+		int mapNum = 5;
 
 		try {
 			// parameter variables available
@@ -96,9 +96,9 @@ public class p1 {
 			System.out.println(m.printMapFormatted());
 
 			// print the path-finding method being used
-			x = ((method == 1) ? "stack" : ((method == 2) ? "queue" : "optimal"));
+			x = ((method == 1) ? "stack" : ((method == 2) ? "queue" : "optimal")) + " method";
 			System.out.println("|----------------------------------------|");
-			System.out.println("| finding path with " + x + "          ".substring(x.length()) + "           |");
+			System.out.println("| finding path with " + x + "                 ".substring(x.length()) + "    |");
 			System.out.println("|----------------------------------------|");
 			System.out.println("|                                        |");
 
@@ -109,7 +109,7 @@ public class p1 {
 
 			// print path finding runtime
 			x = "" + ((System.currentTimeMillis() - start) / 1000);
-			if (printTime) {
+			if (doPrintTime) {
 				System.out.println("|----------------------------------------|");
 				System.out.println("| path found                             |");
 				System.out.println("| elapsed time: " + x + "                        ".substring(x.length()) + " |");

@@ -31,16 +31,12 @@ public class PathFinder {
 			} else if (method == 2) {
 				queueFind(temp, i);
 			} else if (method == 3) {
-				Map temp1 = new Map(m.data);
-				stackFind(temp1, i);
-				Map temp2 = new Map(m.data);
-				queueFind(temp2, i);
-				if (temp1.pathLength() < temp2.pathLength()) {
-					temp = temp1;
-				} else {
-					temp = temp1;
-				}
+				stackFind(temp, i);
 			}
+		}
+		
+		if (method == 3) {
+			
 		}
 
 		return temp;
