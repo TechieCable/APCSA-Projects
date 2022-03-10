@@ -30,13 +30,20 @@ public class PathFinder {
 				stackFind(temp, i);
 			} else if (method == 2) {
 				queueFind(temp, i);
-			} else if (method == 3) {
-				stackFind(temp, i);
 			}
+//			else if (method == 3) {
+//				stackFind(temp, i);
+//			}
 		}
-		
+
 		if (method == 3) {
-			
+			Map tempS = find(m, 1);
+			Map tempQ = find(m, 2);
+			if (tempS.pathLength() < tempQ.pathLength()) {
+				return tempS;
+			} else {
+				return tempQ;
+			}
 		}
 
 		return temp;
