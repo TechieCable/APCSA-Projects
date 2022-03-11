@@ -1,10 +1,158 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class PathFinder {
+	// method = 1:stack, 2:queue, 3:opt
+	// printTime
+	// inType = true:coordinate, false:map
+	// outType = true:coordinate, false:map
 
-	// walk backwards
+	private int method;
+	private boolean doPrintTime = false;
 
-	public Map find(Map m, int method) {
+	// true, coordinate mode
+	// false, map mode
+	private boolean inType, outType;
+	Map m;
+
+	private long start;
+
+	public PathFinder() {
+		inType = false;
+		outType = false;
+		method = 0;
+		m = null;
+	}
+
+	public PathFinder(String[] params) {
+		this();
+
+		System.out.println("|----------------------------------------|");
+		System.out.println("|   Project 1: Kirby's Quest for Cake    |");
+		System.out.println("|----------------------------------------|");
+		System.out.println("|                                        |");
+
+		int commandM = 0;
+
+		for (String arg : params) {
+			if (arg.equals("--Help")) {
+				System.out.println("|                  Help                  |");
+				System.out.println("|                                        |");
+				System.out.println("| --Stack                                |");
+				System.out.println("|    Use a stack-based approach only     |");
+				System.out.println("| --Queue                                |");
+				System.out.println("|    Use a queue-based approach only     |");
+				System.out.println("| --Opt                                  |");
+				System.out.println("|    Find the best path to the cake      |");
+				System.out.println("| --Incoordinate                         |");
+				System.out.println("|    File is in coordinate system        |");
+				System.out.println("| --Outcoordinate                        |");
+				System.out.println("|    Print in coordinate system          |");
+				System.out.println("| --Help                                 |");
+				System.out.println("|    View this help dialog               |");
+				System.out.println("|                                        |");
+				System.exit(0);
+			} else if (arg.equals("--Stack")) {
+				commandM += 1;
+			} else if (arg.equals("--Queue")) {
+				commandM += 2;
+			} else if (arg.equals("--Opt")) {
+				commandM += 4;
+			} else if (arg.equals("--Time")) {
+				doPrintTime = true;
+			} else if (arg.equals("--Incoordinate")) {
+				inType = true;
+			} else if (arg.equals("--OutCoordinate")) {
+				outType = true;
+			}
+		}
+
+		if (commandM == 1) { // stack
+			method = 1;
+		} else if (commandM == 2) { // queue
+			method = 2;
+		} else if (commandM == 4) { // optimal
+			method = 3;
+		}
+
+		if (method == 0) {
+			System.out.println("|                 Error                  |");
+			System.out.println("|                                        |");
+			System.out.println("| Please specify one of the available    |");
+			System.out.println("| methods for finding a route            |");
+			System.out.println("|                                        |");
+			System.out.println("| Pass --Help to see options             |");
+			System.out.println("|                                        |");
+			System.exit(-1);
+		}
+	}
+
+	public void setMap(int mapNum) {
+		try {
+			m = new Map(new Scanner(new File("cable-map" + mapNum + (inType ? "-cor" : "") + ".txt")), inType);
+		} catch (FileNotFoundException e) {
+			System.out.println("|                 Error                  |");
+			System.out.println("|                                        |");
+			System.out.println("| The specified map file was not found   |");
+			System.out.println("|                                        |");
+			// TODO: add regex removal
+			System.out.println(e.getMessage());
+			System.exit(-1);
+		}
+	}
+
+	public void printMethod() {
+		String x = ((method == 1) ? "stack" : ((method == 2) ? "queue" : "optimal")) + " method";
+		System.out.println("|----------------------------------------|");
+		System.out.println("| finding path with " + x + "                 ".substring(x.length()) + "    |");
+		System.out.println("|----------------------------------------|");
+		System.out.println("|                                        |");
+	}
+
+	public void startTimer() {
+		start = System.currentTimeMillis();
+	}
+
+	public void printTime() {
+		String x = "" + ((System.currentTimeMillis() - start) / 1000);
+		if (doPrintTime) {
+			System.out.println("|----------------------------------------|");
+			System.out.println("| path found                             |");
+			System.out.println("| elapsed time: " + x + "                        ".substring(x.length()) + " |");
+			System.out.println("|----------------------------------------|");
+			System.out.println("|                                        |");
+		}
+	}
+
+//	######     #    ####### #     #    ####### ### #     # ######  ### #     #  #####  
+//	#     #   # #      #    #     #    #        #  ##    # #     #  #  ##    # #     # 
+//	#     #  #   #     #    #     #    #        #  # #   # #     #  #  # #   # #       
+//	######  #     #    #    #######    #####    #  #  #  # #     #  #  #  #  # #  #### 
+//	#       #######    #    #     #    #        #  #   # # #     #  #  #   # # #     # 
+//	#       #     #    #    #     #    #        #  #    ## #     #  #  #    ## #     # 
+//	#       #     #    #    #     #    #       ### #     # ######  ### #     #  #####  
+
+	public Map find() {
+		return find(this.method);
+	}
+
+	public Map find(int method) {
+		if (method == 3) {
+			Map tempS = find(1);
+			Map tempQ = find(2);
+			if (tempS.pathLength() < tempQ.pathLength()) {
+				System.out.println("| Stack method is optimal                |");
+				System.out.println("|                                        |");
+				return tempS;
+			} else {
+				System.out.println("| Queue method is optimal                |");
+				System.out.println("|                                        |");
+				return tempQ;
+			}
+		}
+
 		Map temp = new Map(m.data);
 
 		if (m.numCakes() == 0) {
@@ -30,19 +178,6 @@ public class PathFinder {
 				stackFind(temp, i);
 			} else if (method == 2) {
 				queueFind(temp, i);
-			}
-//			else if (method == 3) {
-//				stackFind(temp, i);
-//			}
-		}
-
-		if (method == 3) {
-			Map tempS = find(m, 1);
-			Map tempQ = find(m, 2);
-			if (tempS.pathLength() < tempQ.pathLength()) {
-				return tempS;
-			} else {
-				return tempQ;
 			}
 		}
 
@@ -183,7 +318,13 @@ public class PathFinder {
 		} // end path tracing
 	}
 
-	// TESTING NODE PATH-FINDING
+//	#     # ####### ######  #######   ####### #######  #####  ####### ### #     #  #####  
+//	##    # #     # #     # #            #    #       #     #    #     #  ##    # #     # 
+//	# #   # #     # #     # #            #    #       #          #     #  # #   # #       
+//	#  #  # #     # #     # #####        #    #####    #####     #     #  #  #  # #  #### 
+//	#   # # #     # #     # #            #    #             #    #     #  #   # # #     # 
+//	#    ## #     # #     # #            #    #       #     #    #     #  #    ## #     # 
+//	#     # ####### ######  #######      #    #######  #####     #    ### #     #  #####  
 
 	class PNode extends Position {
 		ArrayList<PNode> next = new ArrayList<PNode>();
