@@ -15,8 +15,6 @@ public class Map {
 //  ##        ##     ##  #######   ######  ########  ######   ######  #### ##    ##  ######   
 
 	/**
-	 * Map Constructor
-	 * 
 	 * fills a map with empty spaces given on the size of the map
 	 * 
 	 * @param rows
@@ -41,8 +39,6 @@ public class Map {
 	}
 
 	/**
-	 * Map Constructor
-	 * 
 	 * takes a scan with a map file and processes it
 	 * 
 	 * @param scan
@@ -72,14 +68,12 @@ public class Map {
 	}
 
 	/**
-	 * processMap
-	 * 
 	 * processes a map file scan given the mode
 	 * 
 	 * @param scan
-	 * @param inType
+	 * @param inType - true: coordinate method, false: map method
 	 */
-	public void processMap(Scanner scan, boolean inType) {
+	private void processMap(Scanner scan, boolean inType) {
 		int d = 0; // room number
 		if (inType) {
 			// coordinate method
@@ -129,11 +123,9 @@ public class Map {
 //  ##        ##     ## #### ##    ##    ##        #######   #######     ##     ######  
 
 	/**
-	 * toString
-	 * 
 	 * returns map information and all rooms
 	 * 
-	 * @return map
+	 * @return map as string
 	 */
 	public String toString() {
 		String m = "";
@@ -145,26 +137,21 @@ public class Map {
 		return m;
 	}
 
-	public String printMapFormatted() {
-		String res = "";
+	/**
+	 * prints the map using the printer
+	 */
+	public void printMapFormatted() {
 		for (int r = 0; r < data.length; r++) {
 			String[] lines = printRoom(r).split("\n");
-			for (int i = 0; i < lines.length; i++) {
-				res += "|   " + lines[i] + "                                    ".substring(lines[i].length()) + " |\n";
-			}
+			Print.er(lines);
 		}
-		res += "|                                        |";
-
-		return res;
 	}
 
 	/**
-	 * printRoom
-	 * 
 	 * returns a given room on the map
 	 * 
 	 * @param roomNum
-	 * @return room
+	 * @return room as string
 	 */
 	public String printRoom(int roomNum) {
 		String m = "";
@@ -179,12 +166,10 @@ public class Map {
 	}
 
 	/**
-	 * printMap
+	 * return a map in file-like format in map or coordinate method
 	 * 
-	 * return a map given map or coordinate method
-	 * 
-	 * @param method
-	 * @return map
+	 * @param method - true: coordinate method, false: map method
+	 * @return map as string
 	 */
 	public String printMap(boolean method) {
 		String m = "";
@@ -198,12 +183,10 @@ public class Map {
 	}
 
 	/**
-	 * map
+	 * return a map in file-like format with map mode given a starter string
 	 * 
-	 * return a map in map mode given a starter string
-	 * 
-	 * @param m
-	 * @return map
+	 * @param m - starter string
+	 * @return map as string
 	 */
 	private String map(String m) {
 		for (int d = 0; d < data.length; d++) {
@@ -218,18 +201,18 @@ public class Map {
 	}
 
 	/**
-	 * cors
+	 * return a map in file-like format with coordinate mode given a starter string
 	 * 
-	 * return a map in coordinate mode given a starter string
-	 * 
-	 * @param m
+	 * @param m - starter string
 	 * @return map
 	 */
 	private String cors(String m) {
 		for (int d = 0; d < data.length; d++) {
 			for (int r = 0; r < data[d].length; r++) {
 				for (int c = 0; c < data[d][r].length; c++) {
-					m += data[d][r][c].value + " " + r + " " + c + "\n";
+					if (!data[d][r][c].equals(".")) {
+						m += data[d][r][c].value + " " + r + " " + c + "\n";
+					}
 				}
 			}
 		}
@@ -245,8 +228,6 @@ public class Map {
 //  ########  #######   ######  ##     ##    ##    ####  #######  ##    ##  ######  
 
 	/**
-	 * numCakes
-	 * 
 	 * get the number of cakes in a map
 	 * 
 	 * @return cakeCount
@@ -268,7 +249,9 @@ public class Map {
 	/**
 	 * get the length of the path to the cake
 	 * 
-	 * @return
+	 * if path finding has not been run, this will return 0
+	 * 
+	 * @return pathLength
 	 */
 	public int pathLength() {
 		int count = 0;
@@ -285,12 +268,12 @@ public class Map {
 	}
 
 	/**
-	 * locateKurby
+	 * returns Kurby's position in a given room
 	 * 
-	 * returns Kurby's position in a given room or null
+	 * returns null if Kurby cannot be found
 	 * 
 	 * @param roomNum
-	 * @return kurbyPosition
+	 * @return kurbyPosition or null
 	 */
 	public Position locateKurby(int roomNum) {
 		for (int r = 0; r < data[roomNum].length; r++) {
@@ -305,14 +288,14 @@ public class Map {
 	}
 
 	/**
-	 * get
-	 * 
 	 * returns a given position
+	 * 
+	 * returns null if the specified location is out of bounds
 	 * 
 	 * @param room
 	 * @param row
 	 * @param col
-	 * @return position
+	 * @return position or null
 	 */
 	public Position get(int room, int row, int col) {
 		try {
@@ -330,8 +313,6 @@ class Position {
 	boolean visited;
 
 	/**
-	 * Position Constructor
-	 * 
 	 * sets all values to defaults
 	 */
 	public Position() {
@@ -343,8 +324,6 @@ class Position {
 	}
 
 	/**
-	 * Position Constructor
-	 * 
 	 * sets values based on passed values
 	 * 
 	 * @param room
@@ -361,8 +340,6 @@ class Position {
 	}
 
 	/**
-	 * Position Constructor
-	 * 
 	 * sets values based on passed values, accepts String value instead of char
 	 * 
 	 * @param room
@@ -374,6 +351,9 @@ class Position {
 		this(room, row, col, value.charAt(0));
 	}
 
+	/**
+	 * sets the position's value to the path character if it is a walkable position
+	 */
 	public void setPath() {
 		if (this.equals(".")) {
 			this.value = "+".charAt(0);
@@ -396,7 +376,7 @@ class Position {
 	 * check if a position is adjacent to this position
 	 * 
 	 * @param check
-	 * @return
+	 * @return isAdjacent
 	 */
 	public boolean adjacent(Position check) {
 		if (this.room != check.room) {
@@ -425,8 +405,6 @@ class Position {
 	}
 
 	/**
-	 * toString
-	 * 
 	 * returns information about the position
 	 * 
 	 * @return positionInfo

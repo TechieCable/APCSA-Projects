@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PathFinder {
@@ -14,11 +13,15 @@ public class PathFinder {
 
 	// true, coordinate mode
 	// false, map mode
-	private boolean inType, outType;
+	private boolean inType;
+	boolean outType;
 	Map m;
 
 	private long start;
 
+	/**
+	 * sets all values to default values
+	 */
 	public PathFinder() {
 		inType = false;
 		outType = false;
@@ -26,33 +29,26 @@ public class PathFinder {
 		m = null;
 	}
 
+	/**
+	 * handles passed arguments and saves them as path finding settings
+	 * 
+	 * checks for validity of the path finder's elements
+	 * 
+	 * @param params
+	 */
 	public PathFinder(String[] params) {
 		this();
 
-		System.out.println("|----------------------------------------|");
-		System.out.println("|   Project 1: Kirby's Quest for Cake    |");
-		System.out.println("|----------------------------------------|");
-		System.out.println("|                                        |");
+		Print.er("01", "00Project 1: Kirby's Quest for Cake", "01");
 
 		int commandM = 0;
 
 		for (String arg : params) {
 			if (arg.equals("--Help")) {
-				System.out.println("|                  Help                  |");
-				System.out.println("|                                        |");
-				System.out.println("| --Stack                                |");
-				System.out.println("|    Use a stack-based approach only     |");
-				System.out.println("| --Queue                                |");
-				System.out.println("|    Use a queue-based approach only     |");
-				System.out.println("| --Opt                                  |");
-				System.out.println("|    Find the best path to the cake      |");
-				System.out.println("| --Incoordinate                         |");
-				System.out.println("|    File is in coordinate system        |");
-				System.out.println("| --Outcoordinate                        |");
-				System.out.println("|    Print in coordinate system          |");
-				System.out.println("| --Help                                 |");
-				System.out.println("|    View this help dialog               |");
-				System.out.println("|                                        |");
+				Print.er("00Help", "02", "--Stack", "   Use a stack-based approach", "--Queue",
+						"   Use a queue-based approach", "--Opt", "   Find the best path to the cake", "--Incoordinate",
+						"   File is in coordinate system", "--Outcoordinate", "   Print in coordinate system", "--Help",
+						"   View this help dialog");
 				System.exit(0);
 			} else if (arg.equals("--Stack")) {
 				commandM += 1;
@@ -64,7 +60,7 @@ public class PathFinder {
 				doPrintTime = true;
 			} else if (arg.equals("--Incoordinate")) {
 				inType = true;
-			} else if (arg.equals("--OutCoordinate")) {
+			} else if (arg.equals("--Outcoordinate")) {
 				outType = true;
 			}
 		}
@@ -77,52 +73,87 @@ public class PathFinder {
 			method = 3;
 		}
 
-		if (method == 0) {
-			System.out.println("|                 Error                  |");
-			System.out.println("|                                        |");
-			System.out.println("| Please specify one of the available    |");
-			System.out.println("| methods for finding a route            |");
-			System.out.println("|                                        |");
-			System.out.println("| Pass --Help to see options             |");
-			System.out.println("|                                        |");
+		if (!valid()) {
 			System.exit(-1);
 		}
 	}
 
+	/**
+	 * grabs the map from a file, given a map number
+	 * 
+	 * the file name must follow the format:
+	 * 
+	 * cable-map(mapnumber).txt OR cable-map(mapnumber)-cor.txt
+	 * 
+	 * @param mapNum
+	 */
 	public void setMap(int mapNum) {
 		try {
 			m = new Map(new Scanner(new File("cable-map" + mapNum + (inType ? "-cor" : "") + ".txt")), inType);
+			if (!valid()) {
+				System.exit(-1);
+			}
 		} catch (FileNotFoundException e) {
-			System.out.println("|                 Error                  |");
-			System.out.println("|                                        |");
-			System.out.println("| The specified map file was not found   |");
-			System.out.println("|                                        |");
+			Print.er("03", "The specified map file was not found");
 			// TODO: add regex removal
 			System.out.println(e.getMessage());
 			System.exit(-1);
 		}
 	}
 
-	public void printMethod() {
-		String x = ((method == 1) ? "stack" : ((method == 2) ? "queue" : "optimal")) + " method";
-		System.out.println("|----------------------------------------|");
-		System.out.println("| finding path with " + x + "                 ".substring(x.length()) + "    |");
-		System.out.println("|----------------------------------------|");
-		System.out.println("|                                        |");
+	/**
+	 * checks if the path finder's elements are valid
+	 * 
+	 * @return isValid
+	 */
+	private boolean valid() {
+		if (method == 0) {
+			Print.er("03", "Please specify one of the available", "methods for finding a route", "02",
+					"Pass --Help to see options");
+			return false;
+		}
+		if (m != null) {
+			if (m.numCakes() == 0) {
+				Print.er("03", "No cakes found on the map");
+				return false;
+			}
+			for (int i = 0; i < m.rooms; i++) {
+				if (m.locateKurby(i) == null) {
+					Print.er("03", "Kurby could not be found on room#" + i, "Check the map file");
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
+	/**
+	 * print the method used to find the path
+	 */
+	public void printMethod() {
+		Print.er("01",
+				"finding path with " + ((method == 1) ? "stack" : ((method == 2) ? "queue" : "optimal")) + " method",
+				"01");
+	}
+
+	public String printMap() {
+		return m.printMap(outType);
+	}
+
+	/**
+	 * starts the path finder's timer
+	 */
 	public void startTimer() {
 		start = System.currentTimeMillis();
 	}
 
+	/**
+	 * prints the time since the path finder started
+	 */
 	public void printTime() {
-		String x = "" + ((System.currentTimeMillis() - start) / 1000);
 		if (doPrintTime) {
-			System.out.println("|----------------------------------------|");
-			System.out.println("| path found                             |");
-			System.out.println("| elapsed time: " + x + "                        ".substring(x.length()) + " |");
-			System.out.println("|----------------------------------------|");
-			System.out.println("|                                        |");
+			Print.er("01", "path found", "elapsed time: " + ((System.currentTimeMillis() - start) / 1000), "01");
 		}
 	}
 
@@ -134,137 +165,97 @@ public class PathFinder {
 //	#       #     #    #    #     #    #        #  #    ## #     #  #  #    ## #     # 
 //	#       #     #    #    #     #    #       ### #     # ######  ### #     #  #####  
 
-	public Map find() {
-		return find(this.method);
-	}
-
+	/**
+	 * find the path given the path finding method
+	 * 
+	 * Precondition: method must be between 1 and 3, inclusive
+	 * 
+	 * @param method - 1: stack, 2: queue, 3: optimal
+	 * @return map with path found
+	 */
 	public Map find(int method) {
-		if (method == 3) {
-			Map tempS = find(1);
-			Map tempQ = find(2);
-			if (tempS.pathLength() < tempQ.pathLength()) {
-				System.out.println("| Stack method is optimal                |");
-				System.out.println("|                                        |");
-				return tempS;
-			} else {
-				System.out.println("| Queue method is optimal                |");
-				System.out.println("|                                        |");
-				return tempQ;
-			}
+		if (!(method == 1 || method == 2 || method == 3)) {
+			Print.er("03", "Invalid pathfinding index method");
+			System.exit(-1);
 		}
 
 		Map temp = new Map(m.data);
 
-		if (m.numCakes() == 0) {
-			System.out.println("|                 Error                  |");
-			System.out.println("|                                        |");
-			System.out.println("| No cakes found on the map              |");
-			System.out.println("|                                        |");
-			System.exit(-1);
+		if (method == 3) {
+			Map tempS = find(1);
+			Map tempQ = find(2);
+			if (tempS.pathLength() < tempQ.pathLength()) {
+				Print.er("Stack method is optimal");
+				return nodeFind(temp, 1);
+			} else {
+				Print.er("Queue method is optimal");
+				return nodeFind(temp, 2);
+			}
 		}
 
 		for (int i = 0; i < m.rooms; i++) {
-			if (m.locateKurby(i) == null) {
-				System.out.println("|                 Error                  |");
-				System.out.println("|                                        |");
-				System.out.println(
-						"| Kurby could not be found on room#" + i + "    ".substring((i + "").length()) + " |");
-				System.out.println("| Check the map file                     |");
-				System.out.println("|                                        |");
-				System.exit(-1);
-			}
+			// generate a stack of potential path positions using the indicated method
+			DataStructure partialPath = doFind(temp, i, method);
 
-			if (method == 1) {
-				stackFind(temp, i);
-			} else if (method == 2) {
-				queueFind(temp, i);
+			{
+				Position prev = partialPath.pop(), curr;
+				prev.setPath();
+
+				while (partialPath.size() > 0) {
+					curr = partialPath.pop();
+					// if not a valid move
+					if (!curr.adjacent(prev))
+						continue;
+
+					curr.setPath();
+					prev = curr;
+				}
 			}
 		}
 
 		return temp;
 	}
 
-	public void stackFind(Map m, int roomNum) {
-		DataStructures s1 = new Stack();
-		DataStructures s2 = new Stack();
-
-		{ // stack loading
-			s1.push(m.locateKurby(roomNum));
-			s1.peek().visited = true;
-
-			Position prev, current;
-
-			boolean end = false;
-
-			while (!end) {
-				prev = s1.pop();
-				s2.push(prev);
-
-				for (int i = 0; i < 4; i++) {
-					// N S E W
-					if (i == 0) {
-						current = m.get(prev.room, prev.row - 1, prev.col);
-					} else if (i == 1) {
-						current = m.get(prev.room, prev.row + 1, prev.col);
-					} else if (i == 2) {
-						current = m.get(prev.room, prev.row, prev.col + 1);
-					} else { // i == 3
-						current = m.get(prev.room, prev.row, prev.col - 1);
-					}
-
-					if (current != null && !current.visited) {
-						if (current.equals(".")) {
-							s1.push(current);
-						}
-						if (current.equals("C")) {
-							end = true;
-							break;
-						}
-						if (current.equals("|")) {
-							end = true;
-							break;
-						}
-
-						current.visited = true;
-					}
-				}
-			}
-		} // end stack loading
-
-		{// path tracing
-			Position prev = s2.pop(), curr;
-			prev.setPath();
-
-			while (s2.size() > 0) {
-				curr = s2.pop();
-				// if not a valid move
-				if (!curr.adjacent(prev))
-					continue;
-
-				curr.setPath();
-				prev = curr;
-			}
-		}
-
+	/**
+	 * uses the find method with the path finder's method setting to find a path
+	 * 
+	 * @return map with path found
+	 */
+	public Map find() {
+		return find(this.method);
 	}
 
-	public void queueFind(Map m, int roomNum) {
-		// enqueue
-		DataStructures q1 = new Queue();
-		// dequeue
-		DataStructures q2 = new Queue();
+	/**
+	 * path finding method for each room, given a map and the path finding method
+	 * 
+	 * @param m
+	 * @param roomNum
+	 * @param type    - 1: stack, 2: queue
+	 * @return data structure with partial path
+	 */
+	private DataStructure doFind(Map m, int roomNum, int type) {
+		DataStructure visiter;
+		DataStructure pather;
 
-		{ // queue loading
-			q1.push(m.locateKurby(roomNum));
-			q1.peek().visited = true;
+		if (type == 1) {
+			visiter = new Stack();
+			pather = new Stack();
+		} else { // type == 2;
+			visiter = new Queue();
+			pather = new Queue();
+		}
+
+		{ // start data loading
+			visiter.push(m.locateKurby(roomNum));
+			visiter.peek().visited = true;
 
 			Position prev, current;
 
 			boolean end = false;
 
 			while (!end) {
-				prev = q1.pop();
-				q2.push(prev);
+				prev = visiter.pop();
+				pather.push(prev);
 
 				for (int i = 0; i < 4; i++) {
 					// N S E W
@@ -280,7 +271,7 @@ public class PathFinder {
 
 					if (current != null && !current.visited) {
 						if (current.equals(".")) {
-							q1.push(current);
+							visiter.push(current);
 						}
 						if (current.equals("C")) {
 							end = true;
@@ -295,27 +286,18 @@ public class PathFinder {
 					}
 				}
 			}
-		} // end queue loading
+		} // end data loading
 
-		{ // path tracing
-			Stack s = new Stack();
-			while (q2.size() > 0) {
-				s.push(q2.pop());
+		// if using queue method, push data into a stack
+		if (type == 2) {
+			DataStructure res = new Stack();
+			while (pather.size() > 0) {
+				res.push(pather.pop());
 			}
+			return res;
+		}
 
-			Position prev = s.pop(), curr;
-			prev.setPath();
-
-			while (s.size() > 0) {
-				curr = s.pop();
-				// if not a valid move
-				if (!curr.adjacent(prev))
-					continue;
-
-				curr.setPath();
-				prev = curr;
-			}
-		} // end path tracing
+		return pather;
 	}
 
 //	#     # ####### ######  #######   ####### #######  #####  ####### ### #     #  #####  
@@ -326,66 +308,83 @@ public class PathFinder {
 //	#    ## #     # #     # #            #    #       #     #    #     #  #    ## #     # 
 //	#     # ####### ######  #######      #    #######  #####     #    ### #     #  #####  
 
-	class PNode extends Position {
-		ArrayList<PNode> next = new ArrayList<PNode>();
-	}
+	/**
+	 * uses nodes to find a more optimal path
+	 * 
+	 * @param m
+	 * @param method
+	 * @return map with path found
+	 */
+	private Map nodeFind(Map m, int method) {
+		for (int i = 0; i < m.rooms; i++) {
+			DataStructure path = doFind(m, i, method);
+			Node curr;
+			Node head = new Node(path.pop());
+			Node it;
 
-	public void nodeFind(Map m, int roomNum) {
-		DataStructures s1 = new Stack();
-		DataStructures s2 = new Stack();
+			while (path.size() > 0) {
+				curr = new Node(path.pop());
+				it = head;
 
-		s1.push(m.locateKurby(roomNum));
-		s1.peek().visited = true;
-
-		PNode node = (PNode) s1.peek();
-		PNode curr = node;
-		Position prev, current;
-
-		boolean end = false;
-
-		while (!end) {
-			prev = s1.pop();
-			s2.push(prev);
-
-			for (int i = 0; i < 4; i++) {
-				// N S E W
-				if (i == 0) {
-					current = m.get(prev.room, prev.row - 1, prev.col);
-				} else if (i == 1) {
-					current = m.get(prev.room, prev.row + 1, prev.col);
-				} else if (i == 2) {
-					current = m.get(prev.room, prev.row, prev.col + 1);
-				} else { // i == 3
-					current = m.get(prev.room, prev.row, prev.col - 1);
+				while (it != null) {
+					if (it.adjacent(curr)) {
+						it.n = curr;
+					}
+					it = it.n;
 				}
+			}
 
-				if (current != null && !current.visited) {
-					if (current.equals(".")) {
-						s1.push(current);
-					}
-					if (current.equals("C")) {
-						end = true;
-						curr.next.add((PNode) current);
-						break;
-					}
-					if (current.equals("|")) {
-						end = true;
-						break;
-					}
-
-					current.visited = true;
-				}
+			it = head;
+			while (it != null) {
+				it.p.setPath();
+				it = it.n;
 			}
 		}
 
-		PNode x = node;
-		while (x != null) {
-			Position temp = s2.pop();
-			if (temp.equals(".")) {
-				temp.value = "+".charAt(0);
-			}
-		}
-
+		return m;
 	}
 
+}
+
+class Node {
+	Position p;
+	Node n;
+
+	/**
+	 * sets all values to null
+	 */
+	public Node() {
+		p = null;
+		n = null;
+	}
+
+	/**
+	 * sets position value to passed position and next node to null
+	 * 
+	 * @param p
+	 */
+	public Node(Position p) {
+		this.p = p;
+		n = null;
+	}
+
+	/**
+	 * determines if the passed node's position is adjacent to this position
+	 * 
+	 * @param x
+	 * @return isAdjacent
+	 */
+	public boolean adjacent(Node x) {
+		return this.p.adjacent(x.p);
+	}
+
+	/**
+	 * returns this position's information and specifies that it is contained in a
+	 * node
+	 * 
+	 * @return node as string
+	 */
+	public String toString() {
+		return "Node " + p.toString();
+	}
 }
