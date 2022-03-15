@@ -31,21 +31,26 @@ public class p1 {
 
 		pathFound.printMapFormatted();
 
-		try {
-			FileWriter f = new FileWriter("lastmap.txt");
-			f.write("" + pathFound.printMap(p.outType));
-			f.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		System.out.println(pathFound.printMap(p.outType));
+
+//		try {
+//			FileWriter f = new FileWriter("lastmap.txt");
+//			f.write("" + pathFound.printMap(p.outType));
+//			f.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 }
 
 class Print {
 	static final String ps = "                                      ";
+	static boolean silence = true;
 
 	public static void er(String... lines) {
+		if (silence)
+			return;
 		for (int i = 0; i < lines.length; i++) {
 			boolean center = false;
 
