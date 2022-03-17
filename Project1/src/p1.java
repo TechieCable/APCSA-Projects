@@ -1,6 +1,3 @@
-import java.io.FileWriter;
-import java.io.IOException;
-
 public class p1 {
 	// help
 	// method
@@ -8,39 +5,14 @@ public class p1 {
 	// incoordinate
 	// outcoordinate
 
-	static final int mapNum = 8;
+	public p1() {
+
+	}
 
 	public static void main(String[] args) {
 		PathFinder p = new PathFinder(args);
 
-		p.setMap(mapNum);
-
-		// print map before finding path
-		p.m.printMapFormatted();
-
-		// print the path-finding method being used
-		p.printMethod();
-
-		// start timer
-		p.startTimer();
-
-		Map pathFound = p.find();
-
-		// end timer and print time
-		p.printTime();
-
-		pathFound.printMapFormatted();
-
-		System.out.println(pathFound.printMap(p.outType));
-
-//		try {
-//			FileWriter f = new FileWriter("lastmap.txt");
-//			f.write("" + pathFound.printMap(p.outType));
-//			f.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		System.out.println(p.find().printMap(p.outType));
 	}
 }
 

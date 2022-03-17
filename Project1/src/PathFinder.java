@@ -65,6 +65,8 @@ public class PathFinder {
 			}
 		}
 
+		setMap(params[params.length - 1]);
+
 		if (commandM == 1) { // stack
 			method = 1;
 		} else if (commandM == 2) { // queue
@@ -79,20 +81,13 @@ public class PathFinder {
 	}
 
 	/**
-	 * grabs the map from a file, given a map number
-	 * 
-	 * the file name must follow the format:
-	 * 
-	 * cable-map(mapnumber).txt OR cable-map(mapnumber)-cor.txt
+	 * grabs the map from a file, given a file name
 	 * 
 	 * @param mapNum
 	 */
-	public void setMap(int mapNum) {
+	public void setMap(String fileName) {
 		try {
-			m = new Map(new Scanner(new File("cable-map" + mapNum + (inType ? "-cor" : "") + ".txt")), inType);
-			if (!valid()) {
-				System.exit(-1);
-			}
+			m = new Map(new Scanner(new File(fileName)), inType);
 		} catch (FileNotFoundException e) {
 			Print.er("03", "The specified map file was not found");
 			// TODO: add regex removal
@@ -185,10 +180,8 @@ public class PathFinder {
 			Map tempS = find(1);
 			Map tempQ = find(2);
 			if (tempS.pathLength() < tempQ.pathLength()) {
-				Print.er("Stack method is optimal");
 				return nodeFind(temp, 1);
 			} else {
-				Print.er("Queue method is optimal");
 				return nodeFind(temp, 2);
 			}
 		}
