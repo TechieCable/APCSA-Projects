@@ -5,75 +5,96 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Driver {
-	public static void main(String[] args) throws FileNotFoundException {
-		// current, before, after
-		HashMap<String, Word> text = new HashMap<String, Word>();
+	public static final String replacements = "n't|'s|,|\\.|;|:|\\\"|'|`|~|&|%|\\(|\\)|\\?|!|-|\\d";
 
+	public static void main(String[] args) throws FileNotFoundException {
+		HashMap<String, Word> text = new HashMap<String, Word>();
 		Scanner s = new Scanner(new File("great-gatsby.txt"));
 
-		String before = null, curr = trim(s.next()), after = trim(s.next());
+		String curr = trim(s.next()), after = trim(s.next());
+
+		Word max = new Word();
 
 		while (curr != null) {
-//			System.out.println("before: " + before + ", curr: " + curr + ", after: " + after);
-
 			if (text.containsKey(curr)) {
 				Word x = text.get(curr);
-				x.add(before, after);
+				x.addAfter(after);
 				text.put(curr, x);
 			} else {
-				text.put(curr, new Word(before, after));
+				text.put(curr, new Word(after, curr));
 			}
 
-			before = trim(curr);
-			curr = trim(after);
+			if (!(equals(curr, "the", "and", "a", "i", "to", "of"))) {
+				if (text.get(curr).count() > max.count()) {
+					max = text.get(curr);
+				}
+			}
 
+			curr = trim(after);
 			after = (s.hasNext()) ? trim(s.next()) : null;
+
+			while (curr != null && curr.equals("")) {
+				curr = trim(after);
+				after = (s.hasNext()) ? trim(s.next()) : null;
+			}
 		}
 
 		s.close();
 
 		System.out.println(text);
+		System.out.println(max.info() + " and is followed by: " + max);
 	}
 
 	public static String trim(String x) {
 		if (x == null)
 			return null;
-		return x.toLowerCase().replaceAll(",|\\.|;|:|\"|'|`|~|&|%|\\(|\\)|\\?|!|-|\\d", "").trim();
+		return x.toLowerCase().replaceAll(replacements, "").trim();
+	}
+
+	public static boolean equals(String x, String... checks) {
+		for (String c : checks) {
+			if (x.equals(c)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
 
 class Word {
-	ArrayList<String> before, after;
+	private String word;
+	private ArrayList<String> after;
+	private int count;
 
 	public Word() {
-		this.before = new ArrayList<String>();
+		this.word = "";
 		this.after = new ArrayList<String>();
+		this.count = 0;
 	}
 
-	public Word(String b, String a) {
+	public Word(String a, String word) {
 		this();
-		add(b, a);
-	}
-
-	public void add(String b, String a) {
-		addBefore(b);
+		this.word = word;
 		addAfter(a);
 	}
 
-	public void addBefore(String x) {
-		if (x == null)
-			return;
-		before.add(x);
-	}
-
 	public void addAfter(String x) {
+		count++;
 		if (x == null)
 			return;
 		after.add(x);
 	}
 
+	public int count() {
+		return count;
+	}
+
+	public String info() {
+		return word + " appears " + count + " times";
+	}
+
 	public String toString() {
-		return "(" + before.toString() + "; " + after.toString() + ")";
+		return after.toString();
 	}
 }
