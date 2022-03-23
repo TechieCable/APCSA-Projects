@@ -7,7 +7,6 @@ public class BiGram {
 	public static final String replacements = "n't|'s|,|\\.|;|:|\"|'|`|~|&|%|\\(|\\)|\\?|!|-|\\d";
 
 	HashMap<String, Word> map = new HashMap<String, Word>();
-	ArrayList<String> allWords = new ArrayList<String>();
 
 	public BiGram(Scanner s) {
 		String curr = trim(s.next()), after = trim(s.next());
@@ -20,7 +19,6 @@ public class BiGram {
 			} else {
 				map.put(curr, new Word(after, curr));
 			}
-			allWords.add(curr);
 
 			curr = trim(after);
 			after = (s.hasNext()) ? trim(s.next()) : null;
@@ -32,15 +30,6 @@ public class BiGram {
 		}
 
 		s.close();
-
-		for (int i = 0; i < allWords.size(); i++) {
-			for (int j = i + 1; j < allWords.size(); j++) {
-				if (allWords.get(i).equals(allWords.get(j))) {
-					allWords.remove(j);
-					j--;
-				}
-			}
-		}
 	}
 
 	public String trim(String x) {
@@ -51,19 +40,32 @@ public class BiGram {
 
 	public String nextWord(ArrayList<String> text) {
 		String x = trim(text.get(text.size() - 1));
+		Map<String, Integer> n;
 
-		Map<String, Integer> n = map.get(x).after;
-
-		if (n == null) {
+		try {
+			n = map.get(x).after;
+		} catch (Exception e) {
 			return ".";
 		}
-		
-		n.remove("room");
-		n.remove("door");
-		n.remove("house");
 
-		for (String e : text)
-			n.remove(e);
+//		n.remove("room");
+//		n.remove("door");
+//		n.remove("house");
+
+		n.remove("enter");
+		n.remove("exit");
+		n.remove("tybalt");
+		n.remove("romeo");
+		n.remove("mother");
+
+		for (String e : text) {
+			if (n.containsKey(e)) {
+				n.put(e, n.get(e) / 2);
+				if (n.get(e) < 1) {
+					n.remove(e);
+				}
+			}
+		}
 
 		Map.Entry<String, Integer> maxOccurance = null;
 		for (Map.Entry<String, Integer> e : n.entrySet()) {
