@@ -207,3 +207,64 @@ public class BinarySearchTree {
 	}
 
 }
+
+class BinarySearchTree2 extends BinarySearchTree {
+	public void add(int x) {
+		add(new Node(x));
+	}
+
+//	BinarySearchTree temp = new BinarySearchTree();
+//	temp.add(top);
+//	System.out.println(temp.bfs());
+	public void rotateLeft(Node t) {
+		if (t.equals(head)) {
+			Node x = head;
+			if (x.right == null) {
+				return;
+			}
+			Node top = head.right;
+			head.right = null;
+			top.left = x;
+			head = top;
+			return;
+		}
+		Node rotate = null;
+		Node parent = findParent(t, head);
+		if (parent.left != null && parent.left.equals(t)) {
+			rotate = parent.left;
+		} else if (parent.right != null && parent.left.equals(t)) {
+			rotate = parent.right;
+		}
+		if (rotate.right == null || rotate == null) {
+			return;
+		}
+		Node top = rotate.right;
+		parent.left = top;
+		rotate.right = top.left;
+		top.left = rotate;
+	}
+
+	public Node findParent(Node t, Node parent) {
+		if (parent.right != null && parent.right.equals(t)) {
+			return parent;
+		} else if (parent.left != null && parent.left.equals(t)) {
+			return parent;
+		}
+		if (t.getData() < parent.getData()) {
+			return findParent(t, parent.left);
+		} else {
+			return findParent(t, parent.right);
+		}
+	}
+
+	public static void main(String[] args) {
+		BinarySearchTree2 b = new BinarySearchTree2();
+		// 10 5 15 2 7 6 8
+		b.add(10);
+		b.add(7);
+		b.add(11);
+		System.out.println(b.bfs());
+		b.rotateLeft(b.head);
+		System.out.println(b.bfs());
+	}
+}

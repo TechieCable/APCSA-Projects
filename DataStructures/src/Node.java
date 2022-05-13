@@ -22,4 +22,8 @@ public class Node {
 	public String toString() {
 		return data + "";
 	}
+
+	public boolean equals(Node n) {
+		return n.getData() == getData();
+	}
 }
